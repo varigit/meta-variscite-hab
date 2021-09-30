@@ -1,0 +1,40 @@
+From 61d1192befccc1875b692d176f71c405ad205764 Mon Sep 17 00:00:00 2001
+From: Nate Drude <nate.d@variscite.com>
+Date: Thu, 16 Sep 2021 11:05:57 -0500
+Subject: [PATCH] soc.mak: imx8: ahab: Use u-boot-atf-container.img.signed
+
+Signed-off-by: Nate Drude <nate.d@variscite.com>
+---
+ iMX8QM/soc.mak | 2 +-
+ iMX8QX/soc.mak | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/iMX8QM/soc.mak b/iMX8QM/soc.mak
+index 7359677..622d52c 100755
+--- a/iMX8QM/soc.mak
++++ b/iMX8QM/soc.mak
+@@ -81,7 +81,7 @@ flash_spl: $(MKIMG) $(AHAB_IMG) scfw_tcm.bin u-boot-spl.bin u-boot-atf-container
+ 	@flashbin_size=`wc -c flash.bin | awk '{print $$1}'`; \
+                    pad_cnt=$$(((flashbin_size + 0x400 - 1) / 0x400)); \
+                    echo "append u-boot-atf-container.img at $$pad_cnt KB"; \
+-                   dd if=u-boot-atf-container.img of=flash.bin bs=1K seek=$$pad_cnt;
++                   dd if=u-boot-atf-container.img-signed of=flash.bin bs=1K seek=$$pad_cnt;
+ 
+ flash_spl_flexspi: $(MKIMG) $(AHAB_IMG) scfw_tcm.bin u-boot-spl.bin u-boot-atf-container.img
+ 	./$(MKIMG) -soc QM -rev B0 -dcd skip  -dev flexspi -append $(AHAB_IMG) -c -scfw scfw_tcm.bin -ap u-boot-spl.bin a53 0x00100000 -out flash.bin
+diff --git a/iMX8QX/soc.mak b/iMX8QX/soc.mak
+index 1ec1ec0..7d755f5 100755
+--- a/iMX8QX/soc.mak
++++ b/iMX8QX/soc.mak
+@@ -83,7 +83,7 @@ flash_spl: $(MKIMG) $(AHAB_IMG) scfw_tcm.bin u-boot-spl.bin u-boot-atf-container
+ 	@flashbin_size=`wc -c flash.bin | awk '{print $$1}'`; \
+                    pad_cnt=$$(((flashbin_size + 0x400 - 1) / 0x400)); \
+                    echo "append u-boot-atf-container.img at $$pad_cnt KB"; \
+-                   dd if=u-boot-atf-container.img of=flash.bin bs=1K seek=$$pad_cnt;
++                   dd if=u-boot-atf-container.img-signed of=flash.bin bs=1K seek=$$pad_cnt;
+ 
+ flash_spl_flexspi: $(MKIMG) $(AHAB_IMG) scfw_tcm.bin u-boot-spl.bin u-boot-atf-container.img
+ 	./$(MKIMG) -soc QX -rev B0 -dcd skip -dev flexspi -append $(AHAB_IMG) -c -scfw scfw_tcm.bin -ap u-boot-spl.bin a35 0x00100000 -out flash.bin
+-- 
+2.17.1
+

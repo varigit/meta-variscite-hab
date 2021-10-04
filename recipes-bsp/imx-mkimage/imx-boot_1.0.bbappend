@@ -1,3 +1,4 @@
+inherit var-hab
 FILESEXTRAPATHS_prepend := "${THISDIR}/imx-boot-hab:"
 
 DEPENDS_hab += "\
@@ -5,46 +6,12 @@ DEPENDS_hab += "\
     util-linux-native \
     "
 
-SRCREV_hab = ""
-SRC_URI_hab = "git://source.codeaurora.org/external/imx/imx-mkimage.git;protocol=https;branch=${SRCBRANCH};subdir=git;rev=6745ccdcf15384891639b7ced3aa6ce938682365"
+IMX_BOOT_REV_hab="6745ccdcf15384891639b7ced3aa6ce938682365"
+IMX_BOOT_REV_hab_mx8mp="5138add7602a50d1730a54d0b67219f0ce0666b4"
+
 SRC_URI_append_imx8qxp-var-som_hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
 SRC_URI_append_imx8qm-var-som_hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
 SRC_URI_append_imx8mm-var-dart_hab = " file://0001-imx-mkimage-imx8mm-soc.mak-Add-hab-support.patch"
-
-# NXP CST Utils
-# Requires registration, download from https://www.nxp.com/webapp/sps/download/license.jsp?colCode=IMX_CST_TOOL
-# Override NXP_CST_URI in local.conf as needed
-NXP_CST_URI ?= "file://${HOME}/cst-3.1.0.tgz"
-NXP_CST_SHA256 ?= "a8cb42c99e9bacb216a5b5e3b339df20d4c5612955e0c353e20f1bb7466cf222"
-SRC_URI_hab += "${NXP_CST_URI};name=cst;subdir=cst"
-SRC_URI_hab[cst.sha256sum] = "${NXP_CST_SHA256}"
-CST_BIN ?= "${WORKDIR}/cst/release/linux64/bin/cst"
-
-# Override CST_CERTS_URI in local.conf with customer repository:
-CST_CERTS_URI ?= "git://github.com/varigit/var-hab-certs.git;protocol=http;branch=master;rev=c5e3314b6cde00d39470817c37c1c1e1a57c3cec"
-SRC_URI_append_hab += "${CST_CERTS_URI};name=cst-certs;destsuffix=cst-certs;"
-
-CST_CRT_ROOT_mx8m ?= "${WORKDIR}/cst-certs/iMX8M"
-CST_CRT_ROOT_mx8 ?= "${WORKDIR}/cst-certs/iMX8"
-
-# HABv4 Keys
-CST_SRK_mx8m ?=      "${CST_CRT_ROOT}/crts/SRK_1_2_3_4_table.bin"
-CST_CSF_CERT ?= "${CST_CRT_ROOT}/crts/CSF1_1_sha256_4096_65537_v3_usr_crt.pem"
-CST_IMG_CERT ?= "${CST_CRT_ROOT}/crts/IMG1_1_sha256_4096_65537_v3_usr_crt.pem"
-CST_SRK_FUSE_mx8m ?= "${CST_CRT_ROOT}/crts/SRK_1_2_3_4_fuse.bin"
-
-# AHAB Keys
-CST_SRK_mx8 ?=      "${CST_CRT_ROOT}/crts/SRK1234table.bin"
-CST_KEY ?=      "${CST_CRT_ROOT}/crts/SRK1_sha384_4096_65537_v3_usr_crt.pem"
-CST_SRK_FUSE_mx8 ?= "${CST_CRT_ROOT}/crts/SRK1234fuse.bin"
-
-# Override in local.conf with customer serial & password
-CST_KEYPASS ?= "Variscite_password"
-CST_SERIAL ?= "1248163E"
-
-HAB_VER_mx8x="ahab"
-HAB_VER_mx8="ahab"
-HAB_VER_mx8m="habv4"
 
 SRC_URI_append_hab += " \
     file://mx8m_create_csf.sh \
@@ -148,11 +115,6 @@ do_deploy_append_hab() {
 }
 
 do_compile_hab() {
-
-    # Prepare serial and key_pass files with secrets
-    echo "${CST_SERIAL}" > ${CST_CRT_ROOT}/keys/serial
-    echo "${CST_KEYPASS}" > ${CST_CRT_ROOT}/keys/key_pass.txt
-    echo "${CST_KEYPASS}" >> ${CST_CRT_ROOT}/keys/key_pass.txt
 
     # Copy TEE binary to SoC target folder to mkimage
     if ${DEPLOY_OPTEE}; then

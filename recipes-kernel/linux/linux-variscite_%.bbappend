@@ -1,20 +1,28 @@
 inherit var-hab
 FILESEXTRAPATHS_prepend_hab := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS_prepend_hab := "${THISDIR}/../../recipes-bsp/imx-mkimage/imx-boot-hab:"
 
 SRC_URI_append_hab = " \
     file://var-genIVT \
     file://var-default.csf \
     file://align_image.sh \
+    file://mx8_create_csf.sh \
+    file://mx8_template.csf \
     "
 
 # Define SIGN_DTB to authenticate device tree
 # Optional: imx8m family
+# Required: imx8qm and imx8qxp
+SIGN_DTB_mx8qm ?= "${B}/${KERNEL_OUTPUT_DIR}/dts/freescale/imx8qm-var-som-lvds.dtb"
+SIGN_DTB_mx8x ?= "${B}/${KERNEL_OUTPUT_DIR}/dts/freescale/imx8qxp-var-som-symphony-sd.dtb"
 
 LOAD_ADDR_KERNEL_mx8m ?= "0x40480000"
 LOAD_ADDR_DTB_mx8m ?= "0x43000000"
 LOAD_ADDR_KERNEL_mx8 ?= "0x80280000"
 LOAD_ADDR_DTB_mx8 ?= "0x83000000"
 
+MKIMG_SOC_mx8qm="QM"
+MKIMG_SOC_mx8x="QX"
 
 # Generate HAB block for a file
 # Inputs: Start Address, File Path
@@ -65,8 +73,30 @@ create_csf_habv4() {
     echo "             ${HAB_BLOCK_DTB}" >> ${CSF}
 }
 
+# Follows "Authenticating the OS container" from:
+# https://github.com/varigit/uboot-imx/blob/imx_v2020.04_5.4.24_2.1.0_var02/doc/imx/ahab/guides/mx8_mx8x_secure_boot.txt
 do_sign_kernel_ahab() {
-    bbfatal "imx8 not yet supported"
+    MKIMG="${DEPLOY_DIR_IMAGE}/imx-boot-tools/mkimage_imx8"
+    MKIMG_LOG="${WORKDIR}/mkimage.log"
+    IMG=${B}/${KERNEL_OUTPUT_DIR}/Image
+
+    # Generate the OS container image
+    ${MKIMG} -soc ${MKIMG_SOC} -rev B0 -c -ap ${IMG} a35 ${LOAD_ADDR_KERNEL} \
+        --data ${SIGN_DTB} ${LOAD_ADDR_DTB} -out ${WORKDIR}/flash_os.bin > ${MKIMG_LOG}
+
+    TARGET="linux_container"
+
+    # Sign u-boot-atf-container.img, so flash.bin will use the signed version
+    bbnote "${WORKDIR}/mx8_create_csf.sh -t ${TARGET}"
+    CST_SRK="$(realpath --relative-to=${WORKDIR} ${CST_SRK})" \
+    CST_KEY="$(realpath --relative-to=${WORKDIR} ${CST_KEY})" \
+    CST_BIN="$(realpath --relative-to=${WORKDIR} ${CST_BIN})" \
+    IMAGE="$(realpath --relative-to=${WORKDIR} ${WORKDIR}/flash_os.bin)" \
+    LOG_MKIMAGE="${MKIMG_LOG}" \
+    ${WORKDIR}/mx8_create_csf.sh -t ${TARGET}
+
+    # Rename to os_cntr_signed.bin expected by U-Boot bootcmd
+    mv ${WORKDIR}/flash_os.bin-signed ${WORKDIR}/os_cntr_signed.bin
 }
 
 # Follows "Authenticating additional boot images" from:
@@ -113,5 +143,19 @@ do_sign_kernel() {
     fi
 }
 
+do_install_append_hab() {
+    # Install os_cntr_signed.bin for ahab SoCs
+    if [ "ahab" = "${HAB_VER}" ]; then
+        install -d ${D}/${KERNEL_IMAGEDEST}
+        install -m 0644 ${WORKDIR}/os_cntr_signed.bin \
+            ${D}/${KERNEL_IMAGEDEST}/os_cntr_signed.bin-${KERNEL_VERSION}
+        ln -sf os_cntr_signed.bin-${KERNEL_VERSION} ${D}/${KERNEL_IMAGEDEST}/os_cntr_signed.bin
+    fi
+}
 
 addtask sign_kernel after do_compile before do_deploy
+# Depend on ${DEPLOY_DIR_IMAGE}/imx-boot-tools/mkimage_imx8
+do_sign_kernel[depends] = "imx-boot:do_deploy"
+
+FILES_${KERNEL_PACKAGE_NAME}-image_mx8qm_hab += "/boot/os_cntr_signed.bin*"
+FILES_${KERNEL_PACKAGE_NAME}-image_mx8x_hab += "/boot/os_cntr_signed.bin*"

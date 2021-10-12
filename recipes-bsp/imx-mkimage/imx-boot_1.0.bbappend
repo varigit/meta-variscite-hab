@@ -29,9 +29,9 @@ UBOOT_DTBS_TARGET_mx8mm ?= "dtbs_lpddr4_ddr4_evk"
 
 # Name of the image to include in final image
 # e.g. imx-boot-imx8mn-var-som-sd.bin-flash_ddr4_evk-signed
-DEFAULT_IMXBOOT_IMAGE_SUFFIX ?= "-signed"
-DEFAULT_IMXBOOT_IMAGE_SUFFIX_mx8mm ?= "-imx8mm-var-som-symphony-signed"
-DEFAULT_IMXBOOT_IMAGE_SUFFIX_mx8mp ?= "-imx8mp-var-som-symphony-signed"
+UBOOT_DTB_DEFAULT ?= ""
+UBOOT_DTB_DEFAULT_mx8mm ?= "-imx8mm-var-som-symphony"
+UBOOT_DTB_DEFAULT_mx8mp ?= "-imx8mp-var-som-symphony"
 
 sign_uboot_atf_container_ahab() {
     TARGET=$1
@@ -103,11 +103,13 @@ do_deploy_append_hab() {
             else
                 DTB_SUFFIX=""
             fi
+            # Deploy signed imx-boot image for each U-Boot Device Tree
             install -m 0644 ${S}/${BOOT_CONFIG_MACHINE}-${target}${DTB_SUFFIX}-signed \
                 ${DEPLOYDIR}/${BOOT_CONFIG_MACHINE}-${target}${DTB_SUFFIX}
-            install -m 0644 ${S}/${BOOT_CONFIG_MACHINE}-${target}${DEFAULT_IMXBOOT_IMAGE_SUFFIX} \
-                ${DEPLOYDIR}/${BOOT_CONFIG_MACHINE}-${target}
         done
+        # Deploy default signed imx-boot image for sdcard image
+        install -m 0644 ${S}/${BOOT_CONFIG_MACHINE}-${target}${UBOOT_DTB_DEFAULT}-signed \
+            ${DEPLOYDIR}/${BOOT_CONFIG_MACHINE}-${target}
     done
 
     # Deploy U-Boot Fuse Commands

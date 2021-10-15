@@ -40,7 +40,7 @@ sign_uboot_atf_container_ahab() {
 
     # Create u-boot-atf-container.img
     compile_${SOC_FAMILY}
-    make SOC=${SOC_TARGET} ${REV_OPTION} ${UBOOT_DTBS_TARGET}=${UBOOT_DTB_NAME} ${TARGET} > ${LOG_MKIMAGE} 2>&1
+    make SOC=${IMX_BOOT_SOC_TARGET} ${REV_OPTION} ${UBOOT_DTBS_TARGET}=${UBOOT_DTB_NAME} ${TARGET} > ${LOG_MKIMAGE} 2>&1
 
     # Create u-boot-atf-container.img-signed for flash.bin image
     CST_SRK="${CST_SRK}" \
@@ -142,14 +142,14 @@ do_compile_hab() {
                 sign_uboot_atf_container_ahab u-boot-atf-container.img  ${BOOT_STAGING}/u-boot-atf-container.img
             fi
 
-            bbnote "building ${SOC_TARGET} - ${REV_OPTION} ${target}"
-            make SOC=${SOC_TARGET} ${REV_OPTION} ${UBOOT_DTBS_TARGET}=${UBOOT_DTB} ${target} > ${MKIMAGE_LOG}.log 2>&1
+            bbnote "building ${IMX_BOOT_SOC_TARGET} - ${REV_OPTION} ${target}"
+            make SOC=${IMX_BOOT_SOC_TARGET} ${REV_OPTION} ${UBOOT_DTBS_TARGET}=${UBOOT_DTB} ${target} > ${MKIMAGE_LOG}.log 2>&1
 
             # mx8m: run print_fit_hab
             if [ "${SOC_FAMILY}" = "mx8m" ]; then
                 # Create print_fit_hab log for create_csf.sh
                 cp ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/*.dtb   ${BOOT_STAGING}
-                make SOC=${SOC_TARGET} ${REV_OPTION} ${UBOOT_DTBS_TARGET}=${UBOOT_DTB} print_fit_hab > ${MKIMAGE_LOG}.hab 2>&1
+                make SOC=${IMX_BOOT_SOC_TARGET} ${REV_OPTION} ${UBOOT_DTBS_TARGET}=${UBOOT_DTB} print_fit_hab > ${MKIMAGE_LOG}.hab 2>&1
             fi
 
             if [ -e "${BOOT_STAGING}/flash.bin" ]; then

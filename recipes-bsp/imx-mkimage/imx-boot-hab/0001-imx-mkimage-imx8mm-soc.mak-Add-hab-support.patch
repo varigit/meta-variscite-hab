@@ -9,10 +9,10 @@ Signed-off-by: Nate Drude <nate.d@variscite.com>
  1 file changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/iMX8M/soc.mak b/iMX8M/soc.mak
-index fd63e3a..e9f8f4b 100644
+index d8c5684..6b48ea3 100644
 --- a/iMX8M/soc.mak
 +++ b/iMX8M/soc.mak
-@@ -198,9 +198,12 @@ u-boot-ddr4-evk.itb: $(dtbs_ddr4_evk)
+@@ -167,9 +167,12 @@ u-boot.itb: $(dtbs)
  
  dtbs_lpddr4_ddr4_evk = $(PLAT)-var-dart-customboard.dtb $(PLAT)-var-som-symphony.dtb
  u-boot-lpddr4-ddr4-evk.itb: $(dtbs_lpddr4_ddr4_evk)
@@ -23,9 +23,9 @@ index fd63e3a..e9f8f4b 100644
  	./mkimage_uboot -E -p 0x3000 -f u-boot-lpddr4-ddr4-evk.its u-boot-lpddr4-ddr4-evk.itb
 +	@rm -f $(dtbs_lpddr4_ddr4_evk)
  
- ifeq ($(HDMI),yes)
- flash_evk: $(MKIMG) signed_hdmi_imx8m.bin u-boot-spl-ddr.bin u-boot.itb
-@@ -277,12 +280,12 @@ flash_dp_spl_uboot: flash_dp_evk
+ dtbs_ddr3l = valddr3l.dtb
+ $(dtbs_ddr3l):
+@@ -303,12 +306,12 @@ flash_dp_spl_uboot: flash_dp_evk
  
  flash_spl_uboot: flash_evk_no_hdmi
  

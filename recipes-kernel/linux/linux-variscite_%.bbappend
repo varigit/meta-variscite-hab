@@ -153,7 +153,7 @@ do_install_append_hab() {
     fi
 }
 
-addtask sign_kernel after do_compile before do_deploy
+addtask sign_kernel after do_compile before do_install
 # Depend on ${DEPLOY_DIR_IMAGE}/imx-boot-tools/mkimage_imx8
 do_sign_kernel[depends] = "${@ 'imx-boot:do_deploy' if 'mx8' in d.getVar('MACHINEOVERRIDES') and 'hab' in d.getVar('OVERRIDES') else ''}"
 

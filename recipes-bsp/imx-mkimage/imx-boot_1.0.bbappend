@@ -11,7 +11,6 @@ IMX_BOOT_REV_hab_mx8mp="5138add7602a50d1730a54d0b67219f0ce0666b4"
 
 SRC_URI_append_imx8qxp-var-som_hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
 SRC_URI_append_imx8qm-var-som_hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
-SRC_URI_append_imx8mm-var-dart_hab = " file://0001-imx-mkimage-imx8mm-soc.mak-Add-hab-support.patch"
 
 SRC_URI_append_hab += " \
     file://mx8m_create_csf.sh \
@@ -25,7 +24,6 @@ UBOOT_DTBS ?= "${UBOOT_DTB_NAME}"
 UBOOT_DTBS_mx8mm ?= "imx8mm-var-dart-customboard.dtb imx8mm-var-som-symphony.dtb"
 UBOOT_DTBS_mx8mp ?= "imx8mp-var-dart-dt8mcustomboard.dtb imx8mp-var-dart-dt8mcustomboard-legacy.dtb imx8mp-var-som-symphony.dtb"
 UBOOT_DTBS_TARGET ?= "dtbs"
-UBOOT_DTBS_TARGET_mx8mm ?= "dtbs_lpddr4_ddr4_evk"
 
 # Name of the image to include in final image
 # e.g. imx-boot-imx8mn-var-som-sd.bin-flash_ddr4_evk-signed

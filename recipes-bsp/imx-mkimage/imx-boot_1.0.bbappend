@@ -12,6 +12,7 @@ IMX_BOOT_REV_hab_mx8mp="5138add7602a50d1730a54d0b67219f0ce0666b4"
 SRC_URI_append_imx8qxp-var-som_hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
 SRC_URI_append_imx8qm-var-som_hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
 SRC_URI_append_imx8mm-var-dart_hab = " file://0001-imx-mkimage-imx8mm-soc.mak-Add-hab-support.patch"
+SRC_URI_append_imx8mp-var-dart_hab = " file://0001-iMX8M-soc.mak-allow-dtbs-override-and-disable-dtb_ch.patch"
 
 SRC_URI_append_hab += " \
     file://mx8m_create_csf.sh \

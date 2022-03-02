@@ -1,0 +1,28 @@
+From 23992f2b5fc13b38fef1076820ce6c6224c90c06 Mon Sep 17 00:00:00 2001
+From: Nate Drude <nate.d@variscite.com>
+Date: Wed, 2 Mar 2022 10:10:04 -0600
+Subject: [PATCH] iMX8M: soc.mak: allow dtbs override and disable dtb_check.sh
+
+dtb_check.sh is not needed for Variscite dtbs, which are passed
+using dtbs variable.
+
+Signed-off-by: Nate Drude <nate.d@variscite.com>
+---
+ iMX8M/soc.mak | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/iMX8M/soc.mak b/iMX8M/soc.mak
+index 9622f5a..bfe7205 100644
+--- a/iMX8M/soc.mak
++++ b/iMX8M/soc.mak
+@@ -139,9 +139,7 @@ u-boot-atf-tee.bin: u-boot.bin bl31.bin tee.bin
+ clean:
+ 	@rm -f $(MKIMG) u-boot-atf.bin u-boot-atf-tee.bin u-boot-spl-ddr.bin u-boot.itb u-boot.its u-boot-ddr3l.itb u-boot-ddr3l.its u-boot-spl-ddr3l.bin u-boot-ddr4.itb u-boot-ddr4.its u-boot-spl-ddr4.bin u-boot-ddr4-evk.itb u-boot-ivt.itb u-boot-ddr4-evk.its $(OUTIMG)
+ 
+-dtb = $(PLAT)-var-dart-dt8mcustomboard.dtb $(PLAT)-var-dart-dt8mcustomboard-legacy.dtb $(PLAT)-var-som-symphony.dtb
+-$(dtb):
+-	./$(DTB_PREPROC) $(dtb) $(dtbs)
++dtb = $(dtbs)
+ 
+ u-boot.itb: $(dtb)
+ 	./$(PAD_IMAGE) tee.bin

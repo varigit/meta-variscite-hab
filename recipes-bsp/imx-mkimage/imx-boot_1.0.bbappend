@@ -1,18 +1,18 @@
 inherit var-hab
-FILESEXTRAPATHS_prepend := "${THISDIR}/imx-boot-hab:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/imx-boot-hab:"
 
-DEPENDS_hab += "\
+DEPENDS:hab += "\
     bc-native \
     util-linux-native \
     "
 
-IMX_BOOT_REV_hab="6745ccdcf15384891639b7ced3aa6ce938682365"
-IMX_BOOT_REV_hab_mx8mp="5138add7602a50d1730a54d0b67219f0ce0666b4"
+IMX_BOOT_REV:hab="6745ccdcf15384891639b7ced3aa6ce938682365"
+IMX_BOOT_REV:hab:mx8mp="5138add7602a50d1730a54d0b67219f0ce0666b4"
 
-SRC_URI_append_imx8qxp-var-som_hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
-SRC_URI_append_imx8qm-var-som_hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
+SRC_URI:append:imx8qxp-var-som:hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
+SRC_URI:append:imx8qm-var-som:hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
 
-SRC_URI_append_hab += " \
+SRC_URI:append:hab += " \
     file://mx8m_create_csf.sh \
     file://mx8m_template.csf \
     file://mx8_create_csf.sh \
@@ -21,15 +21,15 @@ SRC_URI_append_hab += " \
     "
 
 UBOOT_DTBS ?= "${UBOOT_DTB_NAME}"
-UBOOT_DTBS_mx8mm ?= "imx8mm-var-dart-customboard.dtb imx8mm-var-som-symphony.dtb"
-UBOOT_DTBS_mx8mp ?= "imx8mp-var-dart-dt8mcustomboard.dtb imx8mp-var-dart-dt8mcustomboard-legacy.dtb imx8mp-var-som-symphony.dtb"
+UBOOT_DTBS:mx8mm ?= "imx8mm-var-dart-customboard.dtb imx8mm-var-som-symphony.dtb"
+UBOOT_DTBS:mx8mp ?= "imx8mp-var-dart-dt8mcustomboard.dtb imx8mp-var-dart-dt8mcustomboard-legacy.dtb imx8mp-var-som-symphony.dtb"
 UBOOT_DTBS_TARGET ?= "dtbs"
 
 # Name of the image to include in final image
 # e.g. imx-boot-imx8mn-var-som-sd.bin-flash_ddr4_evk-signed
 UBOOT_DTB_DEFAULT ?= ""
-UBOOT_DTB_DEFAULT_mx8mm ?= "-imx8mm-var-som-symphony"
-UBOOT_DTB_DEFAULT_mx8mp ?= "-imx8mp-var-som-symphony"
+UBOOT_DTB_DEFAULT:mx8mm ?= "-imx8mm-var-som-symphony"
+UBOOT_DTB_DEFAULT:mx8mp ?= "-imx8mp-var-som-symphony"
 
 sign_uboot_atf_container_ahab() {
     TARGET=$1
@@ -92,7 +92,7 @@ sign_flash_habv4() {
     dd if=${WORKDIR}/${TARGET}-csf-fit.bin of=${IMG_SIGNED} seek=$(printf "%d" ${offset_fit}) bs=1 conv=notrunc
 }
 
-do_deploy_append_hab() {
+do_deploy:append:hab() {
     # Deploy imx-boot images
     for target in ${IMXBOOT_TARGETS}; do
         for UBOOT_DTB in ${UBOOT_DTBS}; do
@@ -114,7 +114,7 @@ do_deploy_append_hab() {
     install -m 0644 ${WORKDIR}/$(basename ${CST_SRK_FUSE}).u-boot-cmds ${DEPLOYDIR}
 }
 
-do_compile_hab() {
+do_compile:hab() {
 
     # Copy TEE binary to SoC target folder to mkimage
     if ${DEPLOY_OPTEE}; then

@@ -1,8 +1,8 @@
 inherit var-hab
-FILESEXTRAPATHS_prepend_hab := "${THISDIR}/${PN}:"
-FILESEXTRAPATHS_prepend_hab := "${THISDIR}/../../recipes-bsp/imx-mkimage/imx-boot-hab:"
+FILESEXTRAPATHS:prepend:hab := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend:hab := "${THISDIR}/../../recipes-bsp/imx-mkimage/imx-boot-hab:"
 
-SRC_URI_append_hab = " \
+SRC_URI:append:hab = " \
     file://var-genIVT \
     file://var-default.csf \
     file://align_image.sh \
@@ -13,16 +13,16 @@ SRC_URI_append_hab = " \
 # Define SIGN_DTB to authenticate device tree
 # Optional: imx8m family
 # Required: imx8qm and imx8qxp
-SIGN_DTB_mx8qm ?= "${B}/${KERNEL_OUTPUT_DIR}/dts/freescale/imx8qm-var-som-lvds.dtb"
-SIGN_DTB_mx8x ?= "${B}/${KERNEL_OUTPUT_DIR}/dts/freescale/imx8qxp-var-som-symphony-sd.dtb"
+SIGN_DTB:mx8qm ?= "${B}/${KERNEL_OUTPUT_DIR}/dts/freescale/imx8qm-var-som-lvds.dtb"
+SIGN_DTB:mx8x ?= "${B}/${KERNEL_OUTPUT_DIR}/dts/freescale/imx8qxp-var-som-symphony-sd.dtb"
 
-LOAD_ADDR_KERNEL_mx8m ?= "0x40480000"
-LOAD_ADDR_DTB_mx8m ?= "0x43000000"
-LOAD_ADDR_KERNEL_mx8 ?= "0x80280000"
-LOAD_ADDR_DTB_mx8 ?= "0x83000000"
+LOAD_ADDR_KERNEL:mx8m ?= "0x40480000"
+LOAD_ADDR_DTB:mx8m ?= "0x43000000"
+LOAD_ADDR_KERNEL:mx8 ?= "0x80280000"
+LOAD_ADDR_DTB:mx8 ?= "0x83000000"
 
-MKIMG_SOC_mx8qm="QM"
-MKIMG_SOC_mx8x="QX"
+MKIMG_SOC:mx8qm="QM"
+MKIMG_SOC:mx8x="QX"
 
 # Generate HAB block for a file
 # Inputs: Start Address, File Path
@@ -143,7 +143,7 @@ do_sign_kernel() {
     fi
 }
 
-do_install_append_hab() {
+do_install:append:hab() {
     # Install os_cntr_signed.bin for ahab SoCs
     if [ "ahab" = "${HAB_VER}" ]; then
         install -d ${D}/${KERNEL_IMAGEDEST}
@@ -157,5 +157,5 @@ addtask sign_kernel after do_compile before do_install
 # Depend on ${DEPLOY_DIR_IMAGE}/imx-boot-tools/mkimage_imx8
 do_sign_kernel[depends] = "${@ 'imx-boot:do_deploy' if 'mx8' in d.getVar('MACHINEOVERRIDES') and 'hab' in d.getVar('OVERRIDES') else ''}"
 
-FILES_${KERNEL_PACKAGE_NAME}-image_mx8qm_hab += "/boot/os_cntr_signed.bin*"
-FILES_${KERNEL_PACKAGE_NAME}-image_mx8x_hab += "/boot/os_cntr_signed.bin*"
+FILES:${KERNEL_PACKAGE_NAME}-image:mx8qm:hab += "/boot/os_cntr_signed.bin*"
+FILES:${KERNEL_PACKAGE_NAME}-image:mx8x:hab += "/boot/os_cntr_signed.bin*"

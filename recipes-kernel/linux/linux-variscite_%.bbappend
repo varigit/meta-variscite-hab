@@ -82,7 +82,7 @@ do_sign_kernel_ahab() {
 
     # Generate the OS container image
     ${MKIMG} -soc ${MKIMG_SOC} -rev B0 -c -ap ${IMG} a35 ${LOAD_ADDR_KERNEL} \
-        --data ${SIGN_DTB} ${LOAD_ADDR_DTB} -out ${WORKDIR}/flash_os.bin > ${MKIMG_LOG}
+        --data ${SIGN_DTB} a53 ${LOAD_ADDR_DTB} -out ${WORKDIR}/flash_os.bin > ${MKIMG_LOG}
 
     TARGET="linux_container"
 

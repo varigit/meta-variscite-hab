@@ -13,7 +13,7 @@ SRC_URI:append:hab = " \
 # Define SIGN_DTB to authenticate device tree
 # Optional: imx8m family
 # Required: imx8qm and imx8qxp
-SIGN_DTB:mx8qm ?= "${B}/${KERNEL_OUTPUT_DIR}/dts/freescale/imx8qm-var-som-lvds.dtb"
+SIGN_DTB:mx8qm ?= "${B}/${KERNEL_OUTPUT_DIR}/dts/freescale/imx8qm-var-som-symphony-lvds.dtb"
 SIGN_DTB:mx8x ?= "${B}/${KERNEL_OUTPUT_DIR}/dts/freescale/imx8qxp-var-som-symphony-sd.dtb"
 
 LOAD_ADDR_KERNEL:mx8m ?= "0x40480000"

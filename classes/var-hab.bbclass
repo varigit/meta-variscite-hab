@@ -7,7 +7,7 @@ CST_BIN ?= "${WORKDIR}/cst/release/linux64/bin/cst"
 
 # Override CST_CERTS_URI in local.conf with customer repository:
 CST_CERTS_REV ?= "56ad83a9962fb1cd8b4a18dc72993de7e7894bc5"
-CST_CERTS_URI ?= "git://github.com/varigit/var-hab-certs.git;protocol=http;branch=master;rev=${CST_CERTS_REV}"
+CST_CERTS_URI ?= "git://github.com/varigit/var-hab-certs.git;protocol=https;branch=master;rev=${CST_CERTS_REV}"
 SRC_URI:append:hab += "${CST_CERTS_URI};name=cst-certs;destsuffix=cst-certs;"
 SRCREV_cst-certs="${CST_CERTS_REV}"
 

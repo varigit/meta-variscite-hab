@@ -13,16 +13,16 @@ SRC_URI:append:hab = " \
 # Define SIGN_DTB to authenticate device tree
 # Optional: imx8m family
 # Required: imx8qm and imx8qxp
-SIGN_DTB:mx8qm ?= "${B}/${KERNEL_OUTPUT_DIR}/dts/freescale/imx8qm-var-som-symphony-lvds.dtb"
-SIGN_DTB:mx8x ?= "${B}/${KERNEL_OUTPUT_DIR}/dts/freescale/imx8qxp-var-som-symphony-sd.dtb"
+SIGN_DTB:mx8qm-nxp-bsp ?= "${B}/${KERNEL_OUTPUT_DIR}/dts/freescale/imx8qm-var-som-symphony-lvds.dtb"
+SIGN_DTB:mx8x-nxp-bsp ?= "${B}/${KERNEL_OUTPUT_DIR}/dts/freescale/imx8qxp-var-som-symphony-sd.dtb"
 
-LOAD_ADDR_KERNEL:mx8m ?= "0x40480000"
-LOAD_ADDR_DTB:mx8m ?= "0x43000000"
-LOAD_ADDR_KERNEL:mx8 ?= "0x80280000"
-LOAD_ADDR_DTB:mx8 ?= "0x83000000"
+LOAD_ADDR_KERNEL:mx8m-nxp-bsp ?= "0x40480000"
+LOAD_ADDR_DTB:mx8m-nxp-bsp ?= "0x43000000"
+LOAD_ADDR_KERNEL:mx8-nxp-bsp ?= "0x80280000"
+LOAD_ADDR_DTB:mx8-nxp-bsp ?= "0x83000000"
 
-MKIMG_SOC:mx8qm="QM"
-MKIMG_SOC:mx8x="QX"
+MKIMG_SOC:mx8qm-nxp-bsp="QM"
+MKIMG_SOC:mx8x-nxp-bsp="QX"
 
 # Generate HAB block for a file
 # Inputs: Start Address, File Path
@@ -157,5 +157,5 @@ addtask sign_kernel after do_compile before do_install
 # Depend on ${DEPLOY_DIR_IMAGE}/imx-boot-tools/mkimage_imx8
 do_sign_kernel[depends] = "${@ 'imx-boot:do_deploy' if 'mx8' in d.getVar('MACHINEOVERRIDES') and 'hab' in d.getVar('OVERRIDES') else ''}"
 
-FILES:${KERNEL_PACKAGE_NAME}-image:mx8qm:hab += "/boot/os_cntr_signed.bin*"
-FILES:${KERNEL_PACKAGE_NAME}-image:mx8x:hab += "/boot/os_cntr_signed.bin*"
+FILES:${KERNEL_PACKAGE_NAME}-image:mx8qm-nxp-bsp:hab += "/boot/os_cntr_signed.bin*"
+FILES:${KERNEL_PACKAGE_NAME}-image:mx8x-nxp-bsp:hab += "/boot/os_cntr_signed.bin*"

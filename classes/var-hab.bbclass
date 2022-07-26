@@ -11,27 +11,27 @@ CST_CERTS_URI ?= "git://github.com/varigit/var-hab-certs.git;protocol=https;bran
 SRC_URI:append:hab += "${CST_CERTS_URI};name=cst-certs;destsuffix=cst-certs;"
 SRCREV_cst-certs="${CST_CERTS_REV}"
 
-CST_CRT_ROOT:mx8m ?= "${WORKDIR}/cst-certs/iMX8M"
-CST_CRT_ROOT:mx8 ?= "${WORKDIR}/cst-certs/iMX8"
+CST_CRT_ROOT:mx8m-nxp-bsp ?= "${WORKDIR}/cst-certs/iMX8M"
+CST_CRT_ROOT:mx8-nxp-bsp ?= "${WORKDIR}/cst-certs/iMX8"
 
 # HABv4 Keys
-CST_SRK:mx8m ?= "${CST_CRT_ROOT}/crts/SRK_1_2_3_4_table.bin"
+CST_SRK:mx8m-nxp-bsp ?= "${CST_CRT_ROOT}/crts/SRK_1_2_3_4_table.bin"
 CST_CSF_CERT ?= "${CST_CRT_ROOT}/crts/CSF1_1_sha256_4096_65537_v3_usr_crt.pem"
 CST_IMG_CERT ?= "${CST_CRT_ROOT}/crts/IMG1_1_sha256_4096_65537_v3_usr_crt.pem"
-CST_SRK_FUSE:mx8m ?= "${CST_CRT_ROOT}/crts/SRK_1_2_3_4_fuse.bin"
+CST_SRK_FUSE:mx8m-nxp-bsp ?= "${CST_CRT_ROOT}/crts/SRK_1_2_3_4_fuse.bin"
 
 # AHAB Keys
-CST_SRK:mx8 ?= "${CST_CRT_ROOT}/crts/SRK1234table.bin"
+CST_SRK:mx8-nxp-bsp ?= "${CST_CRT_ROOT}/crts/SRK1234table.bin"
 CST_KEY ?= "${CST_CRT_ROOT}/crts/SRK1_sha384_4096_65537_v3_usr_crt.pem"
-CST_SRK_FUSE:mx8 ?= "${CST_CRT_ROOT}/crts/SRK1234fuse.bin"
+CST_SRK_FUSE:mx8-nxp-bsp ?= "${CST_CRT_ROOT}/crts/SRK1234fuse.bin"
 
 # Override in local.conf with customer serial & password
 CST_KEYPASS ?= "Variscite_password"
 CST_SERIAL ?= "1248163E"
 
-HAB_VER:mx8x:hab="ahab"
-HAB_VER:mx8qm:hab="ahab"
-HAB_VER:mx8m:hab="habv4"
+HAB_VER:mx8x-nxp-bsp:hab="ahab"
+HAB_VER:mx8qm-nxp-bsp:hab="ahab"
+HAB_VER:mx8m-nxp-bsp:hab="habv4"
 
 do_compile:prepend:hab() {
     # Prepare serial and key_pass files with secrets

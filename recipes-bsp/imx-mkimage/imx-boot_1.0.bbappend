@@ -7,7 +7,7 @@ DEPENDS:hab += "\
     "
 
 IMX_BOOT_REV:hab="6745ccdcf15384891639b7ced3aa6ce938682365"
-IMX_BOOT_REV:hab:mx8mp="5138add7602a50d1730a54d0b67219f0ce0666b4"
+IMX_BOOT_REV:hab:mx8mp-nxp-bsp="5138add7602a50d1730a54d0b67219f0ce0666b4"
 
 SRC_URI:append:imx8qxp-var-som:hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
 SRC_URI:append:imx8qm-var-som:hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
@@ -21,15 +21,15 @@ SRC_URI:append:hab += " \
     "
 
 UBOOT_DTBS ?= "${UBOOT_DTB_NAME}"
-UBOOT_DTBS:mx8mm ?= "imx8mm-var-dart-customboard.dtb imx8mm-var-som-symphony.dtb"
-UBOOT_DTBS:mx8mp ?= "imx8mp-var-dart-dt8mcustomboard.dtb imx8mp-var-dart-dt8mcustomboard-legacy.dtb imx8mp-var-som-symphony.dtb"
+UBOOT_DTBS:mx8mm-nxp-bsp ?= "imx8mm-var-dart-customboard.dtb imx8mm-var-som-symphony.dtb"
+UBOOT_DTBS:mx8mp-nxp-bsp ?= "imx8mp-var-dart-dt8mcustomboard.dtb imx8mp-var-dart-dt8mcustomboard-legacy.dtb imx8mp-var-som-symphony.dtb"
 UBOOT_DTBS_TARGET ?= "dtbs"
 
 # Name of the image to include in final image
 # e.g. imx-boot-imx8mn-var-som-sd.bin-flash_ddr4_evk-signed
 UBOOT_DTB_DEFAULT ?= ""
-UBOOT_DTB_DEFAULT:mx8mm ?= "-imx8mm-var-som-symphony"
-UBOOT_DTB_DEFAULT:mx8mp ?= "-imx8mp-var-som-symphony"
+UBOOT_DTB_DEFAULT:mx8mm-nxp-bsp ?= "-imx8mm-var-som-symphony"
+UBOOT_DTB_DEFAULT:mx8mp-nxp-bsp ?= "-imx8mp-var-som-symphony"
 
 sign_uboot_atf_container_ahab() {
     TARGET=$1
@@ -135,7 +135,7 @@ do_compile:hab() {
             # Prepare log file name
             MKIMAGE_LOG="mkimage-${target}${DTB_SUFFIX}"
 
-            # mx8qm|mx8x: Sign u-boot-atf-container.img, so flash.bin will use the signed version
+            # mx8qm-nxp-bsp|mx8x: Sign u-boot-atf-container.img, so flash.bin will use the signed version
             if [ "${SOC_FAMILY}" = "mx8" ] || [ "${SOC_FAMILY}" = "mx8x" ]; then
                 sign_uboot_atf_container_ahab u-boot-atf-container.img  ${BOOT_STAGING}/u-boot-atf-container.img
             fi

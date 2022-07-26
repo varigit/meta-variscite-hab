@@ -12,7 +12,7 @@ IMX_BOOT_REV:hab:mx8mp-nxp-bsp="5138add7602a50d1730a54d0b67219f0ce0666b4"
 SRC_URI:append:imx8qxp-var-som:hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
 SRC_URI:append:imx8qm-var-som:hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
 
-SRC_URI:append:hab += " \
+SRC_URI:append:hab = " \
     file://mx8m_create_csf.sh \
     file://mx8m_template.csf \
     file://mx8_create_csf.sh \

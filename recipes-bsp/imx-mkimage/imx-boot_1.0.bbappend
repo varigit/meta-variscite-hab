@@ -95,9 +95,10 @@ sign_flash_habv4() {
 do_deploy:append:hab() {
     # Deploy imx-boot images
     for target in ${IMXBOOT_TARGETS}; do
-        for UBOOT_DTB in ${UBOOT_DTBS}; do
+        for uboot_dtb in ${UBOOT_DTBS}; do
+            echo "imx-boot ${target} ${uboot_dtb}" >> /tmp/imx-boot.log
             if [ "$(echo ${UBOOT_DTBS} | wc -w)" -gt "1" ]; then
-                DTB_SUFFIX="-${UBOOT_DTB%.*}"
+                DTB_SUFFIX="-${uboot_dtb%.*}"
             else
                 DTB_SUFFIX=""
             fi
@@ -122,11 +123,11 @@ do_compile:hab() {
     fi
 
     for target in ${IMXBOOT_TARGETS}; do
-        for UBOOT_DTB in ${UBOOT_DTBS}; do
+        for uboot_dtb in ${UBOOT_DTBS}; do
             # If UBOOT_DTBS has more then one dtb, include in imx-boot filename
             # Currently, for imx8m, hab only supports a single U-Boot proper dtb
             if [ "$(echo ${UBOOT_DTBS} | wc -w)" -gt "1" ]; then
-                DTB_SUFFIX="-${UBOOT_DTB%.*}"
+                DTB_SUFFIX="-${uboot_dtb%.*}"
             else
                 DTB_SUFFIX=""
             fi
@@ -141,13 +142,13 @@ do_compile:hab() {
             fi
 
             bbnote "building ${IMX_BOOT_SOC_TARGET} - ${REV_OPTION} ${target}"
-            make SOC=${IMX_BOOT_SOC_TARGET} ${REV_OPTION} ${UBOOT_DTBS_TARGET}=${UBOOT_DTB} ${target} > ${MKIMAGE_LOG}.log 2>&1
+            make SOC=${IMX_BOOT_SOC_TARGET} ${REV_OPTION} ${UBOOT_DTBS_TARGET}=${uboot_dtb} ${target} > ${MKIMAGE_LOG}.log 2>&1
 
             # mx8m: run print_fit_hab
             if [ "${SOC_FAMILY}" = "mx8m" ]; then
                 # Create print_fit_hab log for create_csf.sh
                 cp ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/*.dtb   ${BOOT_STAGING}
-                make SOC=${IMX_BOOT_SOC_TARGET} ${REV_OPTION} ${UBOOT_DTBS_TARGET}=${UBOOT_DTB} print_fit_hab > ${MKIMAGE_LOG}.hab 2>&1
+                make SOC=${IMX_BOOT_SOC_TARGET} ${REV_OPTION} ${UBOOT_DTBS_TARGET}=${uboot_dtb} print_fit_hab > ${MKIMAGE_LOG}.hab 2>&1
             fi
 
             if [ -e "${BOOT_STAGING}/flash.bin" ]; then

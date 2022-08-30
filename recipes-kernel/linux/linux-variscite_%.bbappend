@@ -134,6 +134,11 @@ do_sign_kernel_habv4() {
 
     # Manually authenticate:
     # u-boot> hab_auth_img ${IMG_ADDR} $filesize ${IMG_SIZE}
+    # Write file with example commands:
+    echo "The following is an example for how to manually authenticate an image:" > ${IMG}.gz.uboot-cmds
+    echo >> ${IMG}.gz.uboot-cmds
+    echo "u-boot> tftp \${img_addr} ${IMG_NAME}.gz;unzip \${img_addr} \${loadaddr};" >> ${IMG}.gz.uboot-cmds
+    echo "u-boot> hab_auth_img \${loadaddr} \$filesize ${IMG_SIZE}" >> ${IMG}.gz.uboot-cmds
 }
 
 # Empty function for when hab override not defined

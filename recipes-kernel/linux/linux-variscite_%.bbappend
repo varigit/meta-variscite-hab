@@ -18,7 +18,7 @@ SIGN_DTB:mx8x-nxp-bsp ?= "${B}/${KERNEL_OUTPUT_DIR}/dts/freescale/imx8qxp-var-so
 
 LOAD_ADDR_KERNEL:mx8m-nxp-bsp ?= "0x40480000"
 LOAD_ADDR_DTB:mx8m-nxp-bsp ?= "0x43000000"
-LOAD_ADDR_KERNEL:mx8-nxp-bsp ?= "0x80280000"
+LOAD_ADDR_KERNEL:mx8-nxp-bsp ?= "0x80200000"
 LOAD_ADDR_DTB:mx8-nxp-bsp ?= "0x83000000"
 
 MKIMG_SOC:mx8qm-nxp-bsp="QM"

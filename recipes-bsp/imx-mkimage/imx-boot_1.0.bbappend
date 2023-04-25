@@ -10,6 +10,7 @@ IMX_BOOT_REV_hab="6745ccdcf15384891639b7ced3aa6ce938682365"
 IMX_BOOT_REV_hab_mx8mp="5138add7602a50d1730a54d0b67219f0ce0666b4"
 
 SRC_URI_append_imx8qxp-var-som_hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
+SRC_URI_append_imx8qxpb0-var-som_hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
 SRC_URI_append_imx8qm-var-som_hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
 SRC_URI_append_imx8mm-var-dart_hab = " file://0001-imx-mkimage-imx8mm-soc.mak-Add-hab-support.patch"
 

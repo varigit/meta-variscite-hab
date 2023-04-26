@@ -7,6 +7,7 @@ DEPENDS:hab += "\
     "
 
 SRC_URI:append:imx8qxp-var-som:hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
+SRC_URI:append:imx8qxpb0-var-som:hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
 SRC_URI:append:imx8qm-var-som:hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
 
 SRC_URI:append:hab = " \

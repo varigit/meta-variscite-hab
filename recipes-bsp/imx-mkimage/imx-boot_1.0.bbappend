@@ -10,7 +10,7 @@ SRC_URI:append:imx8qxp-var-som:hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-
 SRC_URI:append:imx8qxpb0-var-som:hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
 SRC_URI:append:imx8qm-var-som:hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
 
-SRC_URI:append:hab = " \
+SRC_URI:append:var-som:hab = " \
     file://mx8m_create_csf.sh \
     file://mx8m_template.csf \
     file://mx8_create_csf.sh \
@@ -90,7 +90,7 @@ sign_flash_habv4() {
     dd if=${WORKDIR}/${TARGET}-csf-fit.bin of=${IMG_SIGNED} seek=$(printf "%d" ${offset_fit}) bs=1 conv=notrunc
 }
 
-do_deploy:append:hab() {
+do_deploy:append:var-som:hab() {
     # Deploy imx-boot images
     for target in ${IMXBOOT_TARGETS}; do
         for uboot_dtb in ${UBOOT_DTBS}; do
@@ -113,7 +113,7 @@ do_deploy:append:hab() {
     install -m 0644 ${WORKDIR}/$(basename ${CST_SRK_FUSE}).u-boot-cmds ${DEPLOYDIR}
 }
 
-do_compile:hab() {
+do_compile:var-som:hab() {
 
     # Copy TEE binary to SoC target folder to mkimage
     if ${DEPLOY_OPTEE}; then

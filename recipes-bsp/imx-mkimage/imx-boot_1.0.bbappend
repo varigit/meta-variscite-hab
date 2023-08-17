@@ -106,7 +106,7 @@ do_deploy:append:var-som:hab() {
         done
         # Deploy default signed imx-boot image for sdcard image
         install -m 0644 ${S}/${BOOT_CONFIG_MACHINE}-${target}${UBOOT_DTB_DEFAULT}-signed \
-            ${DEPLOYDIR}/${BOOT_CONFIG_MACHINE}-${target}
+            ${DEPLOYDIR}/${UUU_BOOTLOADER}
     done
 
     # Deploy U-Boot Fuse Commands

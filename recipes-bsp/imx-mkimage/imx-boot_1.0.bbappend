@@ -77,8 +77,8 @@ sign_flash_habv4() {
     LOG_PRINT_FIT_HAB="${LOG_MKIMAGE_PREFIX}.hab" \
     ${WORKDIR}/mx8m_create_csf.sh -t ${TARGET}
 
-    offset_spl="$(cat ${LOG_MKIMAGE_PREFIX}.log | grep " csf_off" | awk '{print $NF}')"
-    offset_fit="$(cat ${LOG_MKIMAGE_PREFIX}.log | grep " sld_csf_off" | awk '{print $NF}')"
+    offset_spl="$(cat ${LOG_MKIMAGE_PREFIX}.log | grep -w " csf_off" | awk '{print $NF}')"
+    offset_fit="$(cat ${LOG_MKIMAGE_PREFIX}.log | grep -w " sld_csf_off" | awk '{print $NF}')"
 
     # Copy imx-boot image
     IMG_ORIG="${S}/${BOOT_CONFIG_MACHINE}-${TARGET}"

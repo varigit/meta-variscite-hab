@@ -8,7 +8,7 @@ SRC_URI:append:hab = " \
     file://align_image.sh \
     file://mx8_create_csf.sh \
     file://mx8_template.csf \
-    "
+"
 
 # Define SIGN_DTB to authenticate device tree
 # Optional: imx8m family
@@ -126,7 +126,7 @@ do_sign_kernel_habv4() {
     cd ${WORKDIR} && ${CST_BIN} -i ${IMG}.csf -o ${IMG}.csf.bin
 
     # Attach signature to Image_signed
-	cat ${IMG}_pad_ivt ${IMG}.csf.bin > ${IMG}_signed
+    cat ${IMG}_pad_ivt ${IMG}.csf.bin > ${IMG}_signed
 
     # Create final signed Image.gz
     gzip -f ${IMG}_signed

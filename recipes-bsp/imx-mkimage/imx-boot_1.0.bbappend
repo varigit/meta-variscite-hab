@@ -1,10 +1,6 @@
-inherit var-hab
 FILESEXTRAPATHS:prepend := "${THISDIR}/imx-boot-hab:"
 
-DEPENDS:hab += "\
-    bc-native \
-    util-linux-native \
-    "
+inherit var-hab
 
 SRC_URI:append:imx8qxp-var-som:hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"
 SRC_URI:append:imx8qxpb0-var-som:hab = " file://0001-soc.mak-imx8-ahab-Use-u-boot-atf-container.img.signe.patch"

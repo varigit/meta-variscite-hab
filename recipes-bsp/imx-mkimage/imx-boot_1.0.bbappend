@@ -19,6 +19,8 @@ UBOOT_DTBS:mx8mm-nxp-bsp ?= "imx8mm-var-dart-customboard.dtb imx8mm-var-som-symp
 UBOOT_DTBS:mx8mp-nxp-bsp ?= "imx8mp-var-dart-dt8mcustomboard.dtb imx8mp-var-dart-dt8mcustomboard-legacy.dtb imx8mp-var-som-symphony.dtb"
 UBOOT_DTBS_TARGET ?= "dtbs"
 
+BOOT_CONFIG_MACHINE ?= "imx-boot-${MACHINE}-${UBOOT_CONFIG}.bin"
+
 # Name of the image to include in final image
 # e.g. imx-boot-imx8mn-var-som-sd.bin-flash_ddr4_evk-signed
 UBOOT_DTB_DEFAULT ?= ""
@@ -116,42 +118,77 @@ do_compile:var-som:hab() {
         cp ${DEPLOY_DIR_IMAGE}/tee.bin ${BOOT_STAGING}
     fi
 
-    for target in ${IMXBOOT_TARGETS}; do
-        for uboot_dtb in ${UBOOT_DTBS}; do
-            # If UBOOT_DTBS has more then one dtb, include in imx-boot filename
-            # Currently, for imx8m, hab only supports a single U-Boot proper dtb
-            if [ "$(echo ${UBOOT_DTBS} | wc -w)" -gt "1" ]; then
-                DTB_SUFFIX="-${uboot_dtb%.*}"
-            else
-                DTB_SUFFIX=""
+    for type in ${UBOOT_CONFIG}; do
+        if [ "${@d.getVarFlags('UBOOT_DTB_NAME')}" = "None" ]; then
+            UBOOT_DTB_NAME_FLAGS="${type}:${UBOOT_DTB_NAME}"
+        else
+            UBOOT_DTB_NAME_FLAGS="${@' '.join(flag + ':' + dtb for flag, dtb in (d.getVarFlags('UBOOT_DTB_NAME')).items()) if d.getVarFlags('UBOOT_DTB_NAME') is not None else '' }"
+        fi
+
+        for key_value in ${UBOOT_DTB_NAME_FLAGS}; do
+            type_key="${key_value%%:*}"
+            dtb_name="${key_value#*:}"
+
+            if [ "$type_key" = "$type" ]
+            then
+                bbnote "UBOOT_CONFIG = $type, UBOOT_DTB_NAME = $dtb_name"
+
+                UBOOT_CONFIG_EXTRA="$type_key"
+                if [ -e ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/${dtb_name}-${type} ] ; then
+                    UBOOT_DTB_NAME_EXTRA="${dtb_name}-${type}"
+                else
+                    # backward compatibility
+                    UBOOT_DTB_NAME_EXTRA="${dtb_name}"
+                fi
+
+                UBOOT_NAME_EXTRA="u-boot-${MACHINE}.bin-${UBOOT_CONFIG_EXTRA}"
+                for target in ${IMXBOOT_TARGETS}; do
+                    for uboot_dtb in ${UBOOT_DTBS}; do
+                        # If UBOOT_DTBS has more then one dtb, include in imx-boot filename
+                        # Currently, for imx8m, hab only supports a single U-Boot proper dtb
+                        if [ "$(echo ${UBOOT_DTBS} | wc -w)" -gt "1" ]; then
+                            DTB_SUFFIX="-${uboot_dtb%.*}"
+                        else
+                            DTB_SUFFIX=""
+                        fi
+                        compile_${SOC_FAMILY}
+
+                        # Prepare log file name
+                        MKIMAGE_LOG="mkimage-${target}${DTB_SUFFIX}"
+
+                        # mx8qm-nxp-bsp|mx8x: Sign u-boot-atf-container.img, so flash.bin will use the signed version
+                        if [ "${SOC_FAMILY}" = "mx8" ] || [ "${SOC_FAMILY}" = "mx8x" ]; then
+                            sign_uboot_atf_container_ahab u-boot-atf-container.img  ${BOOT_STAGING}/u-boot-atf-container.img
+                        fi
+
+                        bbnote "building ${IMX_BOOT_SOC_TARGET} - ${REV_OPTION} ${target}"
+                        make SOC=${IMX_BOOT_SOC_TARGET} ${REV_OPTION} ${UBOOT_DTBS_TARGET}=${uboot_dtb} ${target} > ${MKIMAGE_LOG}.log 2>&1
+
+                        # mx8m: run print_fit_hab
+                        if [ "${SOC_FAMILY}" = "mx8m" ]; then
+                            # Create print_fit_hab log for create_csf.sh
+                            cp ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/*.dtb   ${BOOT_STAGING}
+                            make SOC=${IMX_BOOT_SOC_TARGET} ${REV_OPTION} ${UBOOT_DTBS_TARGET}=${uboot_dtb} print_fit_hab > ${MKIMAGE_LOG}.hab 2>&1
+                        fi
+
+                        if [ -e "${BOOT_STAGING}/flash.bin" ]; then
+                            cp ${BOOT_STAGING}/flash.bin ${S}/${BOOT_CONFIG_MACHINE}-${target}${DTB_SUFFIX}
+                            cp ${BOOT_STAGING}/flash.bin ${S}/${BOOT_CONFIG_MACHINE}-${target}
+                        fi
+
+                        sign_flash_${HAB_VER} "${target}${DTB_SUFFIX}" "${MKIMAGE_LOG}"
+                    done
+                done
+                unset UBOOT_CONFIG_EXTRA
+                unset UBOOT_DTB_NAME_EXTRA
+                unset UBOOT_NAME_EXTRA
             fi
-            compile_${SOC_FAMILY}
 
-            # Prepare log file name
-            MKIMAGE_LOG="mkimage-${target}${DTB_SUFFIX}"
-
-            # mx8qm-nxp-bsp|mx8x: Sign u-boot-atf-container.img, so flash.bin will use the signed version
-            if [ "${SOC_FAMILY}" = "mx8" ] || [ "${SOC_FAMILY}" = "mx8x" ]; then
-                sign_uboot_atf_container_ahab u-boot-atf-container.img  ${BOOT_STAGING}/u-boot-atf-container.img
-            fi
-
-            bbnote "building ${IMX_BOOT_SOC_TARGET} - ${REV_OPTION} ${target}"
-            make SOC=${IMX_BOOT_SOC_TARGET} ${REV_OPTION} ${UBOOT_DTBS_TARGET}=${uboot_dtb} ${target} > ${MKIMAGE_LOG}.log 2>&1
-
-            # mx8m: run print_fit_hab
-            if [ "${SOC_FAMILY}" = "mx8m" ]; then
-                # Create print_fit_hab log for create_csf.sh
-                cp ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/*.dtb   ${BOOT_STAGING}
-                make SOC=${IMX_BOOT_SOC_TARGET} ${REV_OPTION} ${UBOOT_DTBS_TARGET}=${uboot_dtb} print_fit_hab > ${MKIMAGE_LOG}.hab 2>&1
-            fi
-
-            if [ -e "${BOOT_STAGING}/flash.bin" ]; then
-                cp ${BOOT_STAGING}/flash.bin ${S}/${BOOT_CONFIG_MACHINE}-${target}${DTB_SUFFIX}
-                cp ${BOOT_STAGING}/flash.bin ${S}/${BOOT_CONFIG_MACHINE}-${target}
-            fi
-
-            sign_flash_${HAB_VER} "${target}${DTB_SUFFIX}" "${MKIMAGE_LOG}"
+            unset type_key
+            unset dtb_name
         done
+
+        unset UBOOT_DTB_NAME_FLAGS
     done
 
     # Generate file with instructions for programming fuses

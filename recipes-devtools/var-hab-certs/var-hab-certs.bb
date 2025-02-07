@@ -15,6 +15,7 @@ SRC_URI = "\
 
 CST_CRT_ROOT:mx8m-nxp-bsp ?= "${WORKDIR}/cst-certs/iMX8M"
 CST_CRT_ROOT:mx8-nxp-bsp  ?= "${WORKDIR}/cst-certs/iMX8"
+CST_CRT_ROOT:mx9-nxp-bsp  ?= "${WORKDIR}/cst-certs/iMX9"
 
 BOOT_TOOLS = "imx-boot-tools"
 

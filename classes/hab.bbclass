@@ -2,10 +2,7 @@
 OVERRIDES:append:mx8m-generic-bsp:hab = ":hab4"
 
 # Select signed target based on device
-SIGNED_TARGET:mx8m-generic-bsp:hab = "flash_lpddr4_ddr4_evk"
-SIGNED_TARGET:mx8mp-generic-bsp:hab = "flash_evk"
-SIGNED_TARGET:mx93-generic-bsp:ahab = "flash_singleboot"
-SIGNED_TARGET:mx8qxp-generic-bsp:ahab = "flash_spl"
+SIGNED_TARGET = "${IMXBOOT_TARGETS}"
 
 python var_signbootdtb_handler() {
     if 'ahab' not in d.getVar('OVERRIDES').split(':') and 'hab' not in d.getVar('OVERRIDES').split(':'):

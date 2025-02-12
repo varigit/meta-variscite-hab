@@ -16,7 +16,7 @@ SRC_URI:append:var-som:hab = " \
 
 UBOOT_DTBS ?= "${UBOOT_DTB_NAME}"
 UBOOT_DTBS:mx8mm-nxp-bsp ?= "imx8mm-var-dart-customboard.dtb imx8mm-var-som-symphony.dtb"
-UBOOT_DTBS:mx8mp-nxp-bsp ?= "imx8mp-var-dart-dt8mcustomboard.dtb imx8mp-var-dart-dt8mcustomboard-legacy.dtb imx8mp-var-som-symphony.dtb"
+UBOOT_DTBS:mx8mp-nxp-bsp ?= "imx8mp-var-dart-dt8mcustomboard.dtb imx8mp-var-som-symphony.dtb"
 UBOOT_DTBS_TARGET ?= "dtbs"
 
 # Name of the image to include in final image

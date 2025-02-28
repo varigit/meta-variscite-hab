@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=1f6f1c0be32491a0c8d2915607a28f36"
 inherit deploy
 
 SRC_URI = "${CST_SIGNER};branch=${SRCBRANCH}"
-CST_SIGNER = "git://git@github.com/varigit-dev/nxp-cst-signer.git;protocol=ssh"
+CST_SIGNER = "git://github.com/varigit/nxp-cst-signer.git;protocol=https"
 SRCBRANCH = "master"
 SRCREV = "6f126504e0b625ad192e92613098b999bf61a0f1"
 

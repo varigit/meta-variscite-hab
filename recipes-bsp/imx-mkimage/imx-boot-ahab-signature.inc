@@ -55,7 +55,7 @@ do_sign_boot_image:append() {
     fi
     # Generate signed image using cst_signer
     CST_PATH=${CST_PATH} ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/cst_signer -d -i ${SIGNDIR}/${BOOT_IMAGE_SD} -c ${SIGNDIR}/csf.cfg
-    if [ ! -e "${SIGNDIR}/signed-${BOOT_IMAGE_SD}" ]; then
+    if [ ! -e "${SIGNDIR}/${UBOOT_IMAGE}" ]; then
         bbfatal 'Image signing failed'
     fi
 }
@@ -105,8 +105,8 @@ do_compile:append() {
 
 do_deploy:append() {
     # Copy signed image to DEPLOYDIR and link it to boot image
-    if [ -e "${S}/signed-${BOOT_IMAGE_SD}" ]; then
-        install -m 0644 ${S}/signed-${BOOT_IMAGE_SD} ${DEPLOYDIR}/${UUU_BOOTLOADER}
+    if [ -e "${S}/${UBOOT_IMAGE}" ]; then
+        install -m 0644 ${S}/${UBOOT_IMAGE} ${DEPLOYDIR}/${UUU_BOOTLOADER}
     else
         bbfatal "ERROR: Could not deploy U-Boot Signed image"
     fi

@@ -28,9 +28,11 @@ DTB_LOAD_ADDR:mx93-generic-bsp ?= "0x83000000"
 DTB_LOAD_ADDR:mx8qm-generic-bsp ?= "0x83000000"
 DTB_LOAD_ADDR:mx8qxp-generic-bsp ?= "0x83000000"
 
+CNTR_IMX_FLAGS:mx93-generic-bsp ?= "-soc IMX9"
 CNTR_IMX_FLAGS:mx8qxp-generic-bsp ?= "-soc QX -rev B0"
 CNTR_IMX_FLAGS:mx8qm-generic-bsp ?= "-soc QX -rev B0"
 
+CORTEX_ARCH_FLAG:mx93-generic-bsp ?=  "a55"
 CORTEX_ARCH_FLAG:mx8qxp-generic-bsp ?= "a35"
 CORTEX_ARCH_FLAG:mx8qm-generic-bsp ?= "a53"
 
@@ -118,4 +120,4 @@ do_deploy:append() {
 
 addtask do_deploy after do_compile
 
-COMPATIBLE_MACHINE = "(mx8qm-generic-bsp|mx8qxp-generic-bsp|mx9-generic-bsp)"
+COMPATIBLE_MACHINE = "(mx8qm-generic-bsp|mx8qxp-generic-bsp|mx93-generic-bsp)"

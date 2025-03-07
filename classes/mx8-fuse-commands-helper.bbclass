@@ -54,6 +54,19 @@ create_fuse_cmds_mx8() {
     echo "ahab_close" >> ${fuse_log}
 }
 
+create_fuse_cmds_mx9() {
+    echo "${WARNING1}" > ${fuse_log}
+    word=0
+    for i in $(seq 0 7); do
+        offset=$(echo "$i * 4" | bc)
+        value=$(hexdump -s $offset -n 4  -e '/4 "0x"' -e '/4 "%X""\n"' ${cst_srk_fuse})
+        fuse_write_line 16 $word $value >> ${fuse_log}
+        word="$(expr $word + 1)"
+    done
+    echo "${WARNING2}" >> ${fuse_log}
+    echo "ahab_close" >> ${fuse_log}
+}
+
 create_fuse_cmds() {
     soc="$1"
     cst_srk_fuse="$2"
@@ -71,6 +84,9 @@ create_fuse_cmds() {
         ;;
       mx8)
         create_fuse_cmds_mx8 722
+        ;;
+      mx93)
+        create_fuse_cmds_mx9
         ;;
       *)
         bbwarn "Unsupported SOC: ${soc}"

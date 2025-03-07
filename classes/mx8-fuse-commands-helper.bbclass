@@ -10,7 +10,8 @@
 ## - If any of the previous steps were not performed correctly, the SOM
 ## **will not boot** after this bit is written.
 
-CST_SRK_FUSE ?= "SRK_1_2_3_4_fuse.bin"
+CST_SRK_FUSE ?= "SRK1234fuse.bin"
+CST_SRK_FUSE:mx8m-generic-bsp  ?= "SRK_1_2_3_4_fuse.bin"
 CST_SRK_FUSE_PATH ?= "${DEPLOY_DIR_IMAGE}/imx-cst/crts/${CST_SRK_FUSE}"
 CST_SRK_FUSE_CMDS ?= "${CST_SRK_FUSE}.u-boot-cmds"
 
@@ -77,10 +78,14 @@ create_fuse_cmds() {
     esac
 }
 
-do_compile:append:mx8m-generic-bsp() {
+do_compile:append() {
     create_fuse_cmds ${SOC_FAMILY} ${CST_SRK_FUSE_PATH} ${WORKDIR}/${CST_SRK_FUSE_CMDS}
 }
 
-do_deploy:append:mx8m-generic-bsp() {
-    install -Dm 0755 ${WORKDIR}/${CST_SRK_FUSE_CMDS} ${DEPLOY_DIR_IMAGE}/${CST_SRK_FUSE_CMDS}
+do_deploy:append() {
+    if [ -f ${WORKDIR}/${CST_SRK_FUSE_CMDS} ]; then
+        install -Dm 0755 ${WORKDIR}/${CST_SRK_FUSE_CMDS} ${DEPLOY_DIR_IMAGE}/${CST_SRK_FUSE_CMDS}
+    else
+        bbwarn "Could not deploy SRK fuse U-Boot commands"
+    fi
 }

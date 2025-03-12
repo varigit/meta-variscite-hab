@@ -15,6 +15,21 @@ CST_SRK_FUSE:mx8m-generic-bsp  ?= "SRK_1_2_3_4_fuse.bin"
 CST_SRK_FUSE_PATH ?= "${DEPLOY_DIR_IMAGE}/imx-cst/crts/${CST_SRK_FUSE}"
 CST_SRK_FUSE_CMDS ?= "${CST_SRK_FUSE}.u-boot-cmds"
 
+print_warning1() {
+    echo "# Note: These are One-Time Programmable e-fuses. Once you write them you can't go back, so get it right the first time.
+"
+}
+
+print_warning2() {
+    echo "
+# After the device successfully boots a signed image without generating any HAB events, it is safe to secure, or 'close', the device.
+# This is the last step in the process. Once the fuse is blown, the chip does not load an image that has not been signed using the correct PKI tree.
+# Important notes:
+# - This is again a One-Time Programmable e-fuse. Once you write it you can't go back, so get it right the first time.
+# - If anything in the previous steps wasn't done correctly, the SOM will not boot after writing this bit.
+"
+}
+
 fuse_write_line() {
     bank=$1
     word=$2
@@ -23,7 +38,7 @@ fuse_write_line() {
 }
 
 create_fuse_cmds_mx8m() {
-    echo "${WARNING1}" > ${fuse_log}
+    print_warning1 > ${fuse_log}
     word=0
     bank=6
     for i in $(seq 0 7); do
@@ -36,12 +51,12 @@ create_fuse_cmds_mx8m() {
         fuse_write_line $bank $word $value >> ${fuse_log}
         word="$(expr $word + 1)"
     done
-    echo "${WARNING2}" >> ${fuse_log}
+    print_warning2 >> ${fuse_log}
     echo "fuse prog 1 3 0x02000000" >> ${fuse_log}
 }
 
 create_fuse_cmds_mx8() {
-    echo "${WARNING1}" > ${fuse_log}
+    print_warning1 > ${fuse_log}
     word="$1"
     bank=0
     for i in $(seq 0 15); do
@@ -50,12 +65,12 @@ create_fuse_cmds_mx8() {
         fuse_write_line 0 $word $value >> ${fuse_log}
         word="$(expr $word + 1)"
     done
-    echo "${WARNING2}" >> ${fuse_log}
+    print_warning2 >> ${fuse_log}
     echo "ahab_close" >> ${fuse_log}
 }
 
 create_fuse_cmds_mx9() {
-    echo "${WARNING1}" > ${fuse_log}
+    print_warning1 > ${fuse_log}
     word=0
     for i in $(seq 0 7); do
         offset=$(echo "$i * 4" | bc)
@@ -63,7 +78,7 @@ create_fuse_cmds_mx9() {
         fuse_write_line 16 $word $value >> ${fuse_log}
         word="$(expr $word + 1)"
     done
-    echo "${WARNING2}" >> ${fuse_log}
+    print_warning2 >> ${fuse_log}
     echo "ahab_close" >> ${fuse_log}
 }
 

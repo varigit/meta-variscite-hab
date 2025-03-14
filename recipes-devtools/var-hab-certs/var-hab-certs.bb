@@ -7,12 +7,16 @@ inherit deploy
 CST_CERTS_REV ?= "8686213083f64d592cc4b4ebf2684829040f774d"
 CST_CERTS_URI ?= "git://github.com/varigit/var-hab-certs.git;protocol=https;branch=master;rev=${CST_CERTS_REV}"
 
-CST_HAB_CFG_URI:hab = "file://csf_hab4.cfg"
-CST_HAB_CFG_URI:ahab = "file://csf_ahab.cfg"
-
 SRC_URI = "\
     ${CST_CERTS_URI};name=cst-certs;destsuffix=cst-certs \
-    ${CST_HAB_CFG_URI} \
+"
+
+SRC_URI:append:hab = " \
+    file://csf_hab4.cfg \
+"
+
+SRC_URI:append:ahab = " \
+    file://csf_ahab.cfg \
 "
 
 CST_CRT_ROOT:mx8m-generic-bsp ?= "${WORKDIR}/cst-certs/iMX8M"

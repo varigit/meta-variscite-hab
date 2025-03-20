@@ -2,7 +2,7 @@
 OVERRIDES:append:mx8m-generic-bsp:hab = ":hab4"
 
 # Select signed target based on device
-SIGNED_TARGET = "${IMXBOOT_TARGETS}"
+SIGNED_TARGET ?= "${@d.getVar('IMXBOOT_TARGETS').split()[0]}"
 
 python var_signbootdtb_handler() {
     if 'ahab' not in d.getVar('OVERRIDES').split(':') and 'hab' not in d.getVar('OVERRIDES').split(':'):

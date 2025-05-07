@@ -9,6 +9,10 @@ DEPENDS += "\
     var-hab-certs \
 "
 
+# This package aggregates output deployed by other packages,
+# so set the appropriate dependencies
+do_compile[depends] += "var-hab-certs:do_deploy"
+
 BOOT_IMAGE_SD = "imx-boot-${MACHINE}-sd.bin-${SIGNED_TARGET}"
 BOOT_TOOLS = "imx-boot-tools"
 BOOT_NAME = "imx-boot"

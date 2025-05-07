@@ -12,7 +12,12 @@ DEPENDS += " \
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-do_compile[depends] += "linux-variscite:do_deploy"
+# This package aggregates output deployed by other packages,
+# so set the appropriate dependencies
+do_compile[depends] += " \
+    linux-variscite:do_deploy \
+    var-hab-certs:do_deploy \
+"
 
 BOOT_IMAGE_SD = "imx-boot-${MACHINE}-sd.bin-${SIGNED_TARGET}"
 BOOT_TOOLS = "imx-boot-tools"

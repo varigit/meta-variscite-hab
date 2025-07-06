@@ -1,6 +1,6 @@
-## Variscite i.MX8 and i.MX8M High Assurance Boot
+## Variscite i.MX8, i.MX8M and i.MX9 High Assurance Boot
 
-This layer includes support for signing imx-boot and Linux images for Variscite's i.MX8 family.
+This layer includes support for signing imx-boot and Linux images for Variscite's i.MX8, i.MX8M and i.MX9 family.
 
 For more information, following these steps to find the i.MX8 HAB/AHAB guide for your Variscite System on Module and software release:
 

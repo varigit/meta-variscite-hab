@@ -7,6 +7,8 @@ inherit deploy
 CST_CERTS_REV ?= "8686213083f64d592cc4b4ebf2684829040f774d"
 CST_CERTS_URI ?= "git://github.com/varigit/var-hab-certs.git;protocol=https;branch=master;rev=${CST_CERTS_REV}"
 
+S = "${WORKDIR}/cst-certs"
+
 SRC_URI = "\
     ${CST_CERTS_URI};name=cst-certs;destsuffix=cst-certs \
 "
@@ -19,9 +21,9 @@ SRC_URI:append:ahab = " \
     file://csf_ahab.cfg \
 "
 
-CST_CRT_ROOT:mx8m-generic-bsp ?= "${WORKDIR}/cst-certs/iMX8M"
-CST_CRT_ROOT:mx8-generic-bsp  ?= "${WORKDIR}/cst-certs/iMX8"
-CST_CRT_ROOT:mx9-generic-bsp  ?= "${WORKDIR}/cst-certs/iMX9"
+CST_CRT_ROOT:mx8m-generic-bsp ?= "${S}/iMX8M"
+CST_CRT_ROOT:mx8-generic-bsp  ?= "${S}/iMX8"
+CST_CRT_ROOT:mx9-generic-bsp  ?= "${S}/iMX9"
 
 BOOT_TOOLS = "imx-boot-tools"
 
@@ -34,11 +36,11 @@ do_deploy_hab_cfg() {
 }
 
 do_deploy_hab_cfg:append:hab() {
-    install -m 0755 ${WORKDIR}/csf_hab4.cfg ${DEPLOYDIR}/${BOOT_TOOLS}/csf_hab4.cfg.sample
+    install -m 0755 ${UNPACKDIR}/csf_hab4.cfg ${DEPLOYDIR}/${BOOT_TOOLS}/csf_hab4.cfg.sample
 }
 
 do_deploy_hab_cfg:append:ahab() {
-    install -m 0755 ${WORKDIR}/csf_ahab.cfg ${DEPLOYDIR}/${BOOT_TOOLS}/csf_ahab.cfg.sample
+    install -m 0755 ${UNPACKDIR}/csf_ahab.cfg ${DEPLOYDIR}/${BOOT_TOOLS}/csf_ahab.cfg.sample
 }
 
 do_deploy() {

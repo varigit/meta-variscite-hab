@@ -110,12 +110,12 @@ create_fuse_cmds() {
 }
 
 do_compile:append() {
-    create_fuse_cmds ${SOC_FAMILY} ${CST_SRK_FUSE_PATH} ${WORKDIR}/${CST_SRK_FUSE_CMDS}
+    create_fuse_cmds ${SOC_FAMILY} ${CST_SRK_FUSE_PATH} ${UNPACKDIR}/${CST_SRK_FUSE_CMDS}
 }
 
 do_deploy:append() {
-    if [ -f ${WORKDIR}/${CST_SRK_FUSE_CMDS} ]; then
-        install -Dm 0755 ${WORKDIR}/${CST_SRK_FUSE_CMDS} ${DEPLOY_DIR_IMAGE}/${CST_SRK_FUSE_CMDS}
+    if [ -f ${UNPACKDIR}/${CST_SRK_FUSE_CMDS} ]; then
+        install -Dm 0755 ${UNPACKDIR}/${CST_SRK_FUSE_CMDS} ${DEPLOY_DIR_IMAGE}/${CST_SRK_FUSE_CMDS}
     else
         bbwarn "Could not deploy SRK fuse U-Boot commands"
     fi

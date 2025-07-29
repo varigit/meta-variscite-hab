@@ -3,10 +3,9 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/MIT;md5=0835ad
 
 inherit cst hab
 
-DEPENDS += "imx-boot"
-do_compile[depends] += "u-boot-variscite:do_deploy"
-
 BOOT_TOOLS = "imx-boot-tools"
+
+KERNEL_LOAD_ADDRESS:mx8m-generic-bsp ?= "0x40480000"
 
 # Signs the kernel image.
 do_sign_kernel_image() {
@@ -43,7 +42,7 @@ do_sign_kernel_image:append:hab4() {
     # Pad the image
     objcopy -I binary -O binary --pad-to "${image_pad_size}" --gap-fill=0x00 ${IMAGE} "${SIGNDIR}/${KERNEL_IMAGETYPE}_pad.bin"
 
-    load_address_hex="$(sed -n 's/CONFIG_SYS_LOAD_ADDR=//p' ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/u-boot-imx.config)"
+    load_address_hex="${KERNEL_LOAD_ADDRESS}"
     load_address="$(printf "%u" ${load_address_hex})"
     ivt_pointer="$(expr ${load_address} + ${image_pad_size})"
     csf_pointer="$(expr ${ivt_pointer} + 32)"

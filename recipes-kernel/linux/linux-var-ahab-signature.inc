@@ -23,18 +23,22 @@ do_compile[depends] += " \
 BOOT_TOOLS = "imx-boot-tools"
 
 KERNEL_LOAD_ADDR:mx93-generic-bsp ?= "0x80400000"
+KERNEL_LOAD_ADDR:mx91-generic-bsp ?= "0x80400000"
 KERNEL_LOAD_ADDR:mx8qm-generic-bsp ?= "0x80200000"
 KERNEL_LOAD_ADDR:mx8qxp-generic-bsp ?= "0x80200000"
 
 DTB_LOAD_ADDR:mx93-generic-bsp ?= "0x83000000"
+DTB_LOAD_ADDR:mx91-generic-bsp ?= "0x83000000"
 DTB_LOAD_ADDR:mx8qm-generic-bsp ?= "0x83000000"
 DTB_LOAD_ADDR:mx8qxp-generic-bsp ?= "0x83000000"
 
 CNTR_IMX_FLAGS:mx93-generic-bsp ?= "-soc IMX9"
+CNTR_IMX_FLAGS:mx91-generic-bsp ?= "-soc IMX9"
 CNTR_IMX_FLAGS:mx8qxp-generic-bsp ?= "-soc QX -rev B0"
 CNTR_IMX_FLAGS:mx8qm-generic-bsp ?= "-soc QX -rev B0"
 
 CORTEX_ARCH_FLAG:mx93-generic-bsp ?=  "a55"
+CORTEX_ARCH_FLAG:mx91-generic-bsp ?=  "a55"
 CORTEX_ARCH_FLAG:mx8qxp-generic-bsp ?= "a35"
 CORTEX_ARCH_FLAG:mx8qm-generic-bsp ?= "a53"
 

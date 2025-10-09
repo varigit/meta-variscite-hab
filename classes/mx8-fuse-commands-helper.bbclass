@@ -100,7 +100,7 @@ create_fuse_cmds() {
       mx8)
         create_fuse_cmds_mx8 722
         ;;
-      mx93)
+      mx93|mx91)
         create_fuse_cmds_mx9
         ;;
       *)

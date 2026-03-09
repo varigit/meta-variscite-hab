@@ -77,7 +77,7 @@ do_sign_kernel_image:append:hab4() {
 
 do_sign_kernel_image:append:hab4() {
     # Generate signed image data
-    CST_PATH=${CST_PATH} ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/cst_signer -d -i ${SIGNDIR}/${KERNEL_IMAGETYPE}_pad_ivt.bin -c ${SIGNDIR}/csf.cfg
+    ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/imx_signer -d -i ${SIGNDIR}/${KERNEL_IMAGETYPE}_pad_ivt.bin -c ${SIGNDIR}/csf.cfg
     if [ ! -e "${B}/signed-${KERNEL_IMAGETYPE}_pad_ivt.bin" ]; then
         bbfatal 'Kernel Image signing failed'
     fi

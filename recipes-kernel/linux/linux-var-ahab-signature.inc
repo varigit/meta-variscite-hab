@@ -1,7 +1,7 @@
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
-inherit cst hab
+inherit spsdk hab
 
 SIGNDIR = "${WORKDIR}/kernel-sign-dir"
 
@@ -53,7 +53,7 @@ do_sign_kernel_image() {
 
 do_sign_kernel_image:append:ahab() {
     # Use user defined keys
-    install -m 0755 ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/csf_ahab.cfg.sample ${SIGNDIR}/csf.cfg
+    install -m 0755 ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/spsdk_ahab.yaml.sample ${SIGNDIR}/spsdk.yaml
 }
 
 do_sign_kernel_image:append:ahab() {
@@ -72,8 +72,8 @@ do_sign_kernel_image:append:ahab() {
 }
 
 do_sign_kernel_image:append:ahab() {
-    # Generate signed kernel and dtb image using cst_signer
-    CST_PATH=${CST_PATH} ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/cst_signer -d -i ${SIGNDIR}/flash_os.bin -c ${SIGNDIR}/csf.cfg
+    # Generate signed kernel and dtb image using signer tool
+    ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/imx_signer -d -i ${SIGNDIR}/flash_os.bin -c ${SIGNDIR}/spsdk.yaml
 
     mv ${B}/signed-flash_os.bin ${SIGNDIR}/os_cntr_signed.bin
 }

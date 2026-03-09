@@ -37,7 +37,7 @@ do_sign_boot_image:append() {
         bbfatal 'imx-boot SD image is not available to sign'
     fi
     # Generate signed image using cst_signer
-    CST_PATH=${CST_PATH} ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/cst_signer -d -i ${SIGNDIR}/${BOOT_IMAGE_SD} -c ${SIGNDIR}/csf.cfg
+    ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/imx_signer -d -i ${SIGNDIR}/${BOOT_IMAGE_SD} -c ${SIGNDIR}/csf.cfg
     if [ ! -e "${SIGNDIR}/signed-${BOOT_IMAGE_SD}" ]; then
         bbfatal 'Image signing failed'
     fi

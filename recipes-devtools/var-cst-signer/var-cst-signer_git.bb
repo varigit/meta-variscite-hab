@@ -8,15 +8,15 @@ inherit deploy
 
 SRC_URI = "${CST_SIGNER};branch=${SRCBRANCH}"
 CST_SIGNER = "git://github.com/varigit/nxp-cst-signer.git;protocol=https"
-SRCBRANCH = "master"
-SRCREV = "6f126504e0b625ad192e92613098b999bf61a0f1"
+SRCBRANCH = "v3.0_var01"
+SRCREV = "25f0c9482af267710294af2fc996e3ba4dbf439b"
 
 S = "${WORKDIR}/git"
 
 BOOT_TOOLS = "imx-boot-tools"
 
 do_deploy () {
-    install -Dm 0755 ${S}/src/cst_signer ${DEPLOYDIR}/${BOOT_TOOLS}/cst_signer
+    install -Dm 0755 ${S}/src/imx_signer ${DEPLOYDIR}/${BOOT_TOOLS}/imx_signer
 }
 
 addtask deploy after do_compile before do_install

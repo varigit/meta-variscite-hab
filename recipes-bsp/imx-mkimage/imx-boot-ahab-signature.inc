@@ -1,7 +1,7 @@
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
-inherit cst hab deploy mx8-fuse-commands-helper
+inherit spsdk hab deploy mx8-fuse-commands-helper
 
 DEPENDS += " \
     bc-native \
@@ -32,7 +32,7 @@ do_sign_boot_image() {
 
 do_sign_boot_image:append:ahab() {
     # Use user defined keys
-    install -m 0755 ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/csf_ahab.cfg.sample ${SIGNDIR}/csf.cfg
+    install -m 0755 ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/spsdk_ahab.yaml.sample ${SIGNDIR}/spsdk.yaml
 }
 
 do_sign_boot_image:append() {
@@ -41,7 +41,7 @@ do_sign_boot_image:append() {
         bbfatal 'imx-boot SD image is not available to sign'
     fi
     # Generate signed image using cst_signer
-    CST_PATH=${CST_PATH} ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/cst_signer -d -i ${SIGNDIR}/${BOOT_IMAGE_SD} -c ${SIGNDIR}/csf.cfg
+    ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/imx_signer -d -i ${SIGNDIR}/${BOOT_IMAGE_SD} -c ${SIGNDIR}/spsdk.yaml
     if [ ! -e "${SIGNDIR}/${UBOOT_IMAGE}" ]; then
         bbfatal 'Image signing failed'
     fi

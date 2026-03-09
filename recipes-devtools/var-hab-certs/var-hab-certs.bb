@@ -18,7 +18,7 @@ SRC_URI:append:hab = " \
 "
 
 SRC_URI:append:ahab = " \
-    file://csf_ahab.cfg \
+    file://spsdk_ahab.yaml \
 "
 
 CST_CRT_ROOT:mx8m-generic-bsp ?= "${S}/iMX8M"
@@ -40,7 +40,7 @@ do_deploy_hab_cfg:append:hab() {
 }
 
 do_deploy_hab_cfg:append:ahab() {
-    install -m 0755 ${UNPACKDIR}/csf_ahab.cfg ${DEPLOYDIR}/${BOOT_TOOLS}/csf_ahab.cfg.sample
+    install -m 0755 ${UNPACKDIR}/spsdk_ahab.yaml ${DEPLOYDIR}/${BOOT_TOOLS}/spsdk_ahab.yaml.sample
 }
 
 do_deploy() {

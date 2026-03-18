@@ -62,4 +62,4 @@ do_deploy:append() {
 
 addtask do_deploy after do_compile
 
-COMPATIBLE_MACHINE = "(mx8qm-generic-bsp|mx8qxp-generic-bsp|mx93-generic-bsp)"
+COMPATIBLE_MACHINE = "(mx8qm-generic-bsp|mx8qxp-generic-bsp|mx93-generic-bsp|mx95-generic-bsp)"

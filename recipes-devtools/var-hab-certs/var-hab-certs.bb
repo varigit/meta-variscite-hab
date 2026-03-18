@@ -4,7 +4,7 @@ LICENSE = "CLOSED"
 
 inherit deploy
 
-CST_CERTS_REV ?= "8686213083f64d592cc4b4ebf2684829040f774d"
+CST_CERTS_REV ?= "0b2c9c39fbc5020b5faf8c7f1d0db5381c680785"
 CST_CERTS_URI ?= "git://github.com/varigit/var-hab-certs.git;protocol=https;branch=master;rev=${CST_CERTS_REV}"
 
 S = "${WORKDIR}/cst-certs"
@@ -55,6 +55,15 @@ do_deploy() {
     echo "${CST_KEYPASS}" >> ${DEPLOYDIR}/imx-cst/keys/key_pass.txt
 
     do_deploy_hab_cfg
+}
+
+do_deploy:append:mx95-generic-bsp() {
+    # i.MX95 B0 requires sha512-based SRK binaries
+    mv ${DEPLOYDIR}/imx-cst/crts/SRK1234fuse_mx95b0.bin \
+       ${DEPLOYDIR}/imx-cst/crts/SRK1234fuse.bin
+
+    mv ${DEPLOYDIR}/imx-cst/crts/SRK1234table_mx95b0.bin \
+       ${DEPLOYDIR}/imx-cst/crts/SRK1234table.bin
 }
 
 addtask deploy after do_install before do_build

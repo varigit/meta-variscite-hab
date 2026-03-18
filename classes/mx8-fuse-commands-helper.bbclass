@@ -82,6 +82,22 @@ create_fuse_cmds_mx9() {
     echo "ahab_close" >> ${fuse_log}
 }
 
+create_fuse_cmds_mx95() {
+    print_warning1 > ${fuse_log}
+    for i in $(seq 0 7); do
+        offset=$(echo "$i * 4" | bc)
+        value=$(hexdump -s $offset -n 4 -e '/4 "0x"' -e '/4 "%X""\n"' ${cst_srk_fuse})
+        fuse_write_line 16 $i $value >> ${fuse_log}
+    done
+    for i in $(seq 0 7); do
+        offset=$(echo "$(expr $i + 8) * 4" | bc)
+        value=$(hexdump -s $offset -n 4 -e '/4 "0x"' -e '/4 "%X""\n"' ${cst_srk_fuse})
+        fuse_write_line 17 $i $value >> ${fuse_log}
+    done
+    print_warning2 >> ${fuse_log}
+    echo "ahab_close" >> ${fuse_log}
+}
+
 create_fuse_cmds() {
     soc="$1"
     cst_srk_fuse="$2"
@@ -102,6 +118,9 @@ create_fuse_cmds() {
         ;;
       mx93|mx91)
         create_fuse_cmds_mx9
+        ;;
+      mx95)
+        create_fuse_cmds_mx95
         ;;
       *)
         bbwarn "Unsupported SOC: ${soc}"

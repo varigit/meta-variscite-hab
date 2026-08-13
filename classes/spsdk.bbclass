@@ -1,6 +1,7 @@
 DEPENDS += "var-hab-certs"
+DEPENDS:append:imx95-var-dart = " python3-spsdk-native"
 
-SIG_TOOL_PATH ?= ""
+SIG_TOOL_PATH:imx95-var-dart ?= "${STAGING_BINDIR_NATIVE}"
 SIG_DATA_PATH ?= "${DEPLOY_DIR_IMAGE}/imx-cst"
 
 SIG_TOOL_PATH[export] = "1"

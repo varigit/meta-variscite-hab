@@ -7,7 +7,7 @@ inherit deploy
 CST_CERTS_REV ?= "0b2c9c39fbc5020b5faf8c7f1d0db5381c680785"
 CST_CERTS_URI ?= "git://github.com/varigit/var-hab-certs.git;protocol=https;branch=master;rev=${CST_CERTS_REV}"
 
-S = "${WORKDIR}/cst-certs"
+S = "${UNPACKDIR}/cst-certs"
 
 SRC_URI = "\
     ${CST_CERTS_URI};name=cst-certs;destsuffix=cst-certs \

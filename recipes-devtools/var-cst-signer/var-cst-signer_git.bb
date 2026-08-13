@@ -11,7 +11,7 @@ CST_SIGNER = "git://github.com/varigit/nxp-cst-signer.git;protocol=https"
 SRCBRANCH = "v3.0_var01"
 SRCREV = "25f0c9482af267710294af2fc996e3ba4dbf439b"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/git"
 
 BOOT_TOOLS = "imx-boot-tools"
 

@@ -1,0 +1,24 @@
+From 0c220bb06fc8aa4ca8a12cf36cf1495bd4878d31 Mon Sep 17 00:00:00 2001
+From: Luan Rafael Carneiro <luan.r@variscite.com>
+Date: Thu, 13 Aug 2026 12:00:00 -0300
+Subject: [PATCH] pyproject: relax build dependency versions
+
+The build environment provides newer setuptools and setuptools-scm versions
+than the upstream constraints allow.
+
+Upstream-Status: Inappropriate [OE build dependency versions]
+---
+ pyproject.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -83,7 +83,7 @@
+ nxpshe = "spsdk.apps.nxpshe:safe_main"
+ 
+ [build-system]
+-requires = ["setuptools_scm<8.2", "setuptools>=72.1,<74", "wheel"]
++requires = ["setuptools_scm", "setuptools>=72.1", "wheel"]
+ 
+ [tool.black]
+ line-length = 100

@@ -1,0 +1,97 @@
+From 2f397b87399f433453a935a583245cd75a7443a0 Mon Sep 17 00:00:00 2001
+From: Luan Rafael Carneiro <luan.r@variscite.com>
+Date: Thu, 13 Aug 2026 12:00:00 -0300
+Subject: [PATCH] nxpimage: retain only AHAB command support
+
+The image signing flow only invokes `nxpimage ahab`. Avoid importing command
+groups that require optional hardware communication dependencies.
+
+Also postpone annotations in the shared CLI helpers so the omitted interfaces
+are not resolved while importing the AHAB command.
+
+Upstream-Status: Inappropriate [AHAB-only OE native tool]
+---
+ spsdk/apps/nxpimage.py                 | 30 +----------------------------
+ spsdk/apps/utils/common_cli_options.py | 12 ++++--------
+ 2 files changed, 5 insertions(+), 37 deletions(-)
+
+--- a/spsdk/apps/nxpimage.py
++++ b/spsdk/apps/nxpimage.py
+@@ -12,20 +12,6 @@
+ import click
+ 
+ from spsdk.apps.nxpimage_apps.nxpimage_ahab import ahab_group
+-from spsdk.apps.nxpimage_apps.nxpimage_bca import bca_group
+-from spsdk.apps.nxpimage_apps.nxpimage_bee import bee_group
+-from spsdk.apps.nxpimage_apps.nxpimage_bimg import bootable_image_group
+-from spsdk.apps.nxpimage_apps.nxpimage_cert_block import cert_block_group
+-from spsdk.apps.nxpimage_apps.nxpimage_fcf import fcf_group
+-from spsdk.apps.nxpimage_apps.nxpimage_hab import hab_group
+-from spsdk.apps.nxpimage_apps.nxpimage_iee import iee_group
+-from spsdk.apps.nxpimage_apps.nxpimage_lpcprog import lpcprog_group
+-from spsdk.apps.nxpimage_apps.nxpimage_mbi import mbi_group
+-from spsdk.apps.nxpimage_apps.nxpimage_otfad import otfad_group
+-from spsdk.apps.nxpimage_apps.nxpimage_sb import sb21_group, sb31_group
+-from spsdk.apps.nxpimage_apps.nxpimage_signed_msg import signed_msg_group
+-from spsdk.apps.nxpimage_apps.nxpimage_trustzone import tz_group
+-from spsdk.apps.nxpimage_apps.nxpimage_utils import nxpimage_utils_group
+ from spsdk.apps.utils import spsdk_logger
+ from spsdk.apps.utils.common_cli_options import CommandsTreeGroup, spsdk_apps_common_options
+ from spsdk.apps.utils.utils import catch_spsdk_error
+@@ -44,21 +30,6 @@
+ 
+ 
+ main.add_command(ahab_group)
+-main.add_command(cert_block_group)
+-main.add_command(mbi_group)
+-main.add_command(sb21_group)
+-main.add_command(sb31_group)
+-main.add_command(hab_group)
+-main.add_command(bca_group)
+-main.add_command(fcf_group)
+-main.add_command(lpcprog_group)
+-main.add_command(bootable_image_group)
+-main.add_command(nxpimage_utils_group)
+-main.add_command(iee_group)
+-main.add_command(bee_group)
+-main.add_command(tz_group)
+-main.add_command(signed_msg_group)
+-main.add_command(otfad_group)
+ 
+ 
+ @catch_spsdk_error
+--- a/spsdk/apps/utils/common_cli_options.py
++++ b/spsdk/apps/utils/common_cli_options.py
+@@ -6,6 +6,8 @@
+ # SPDX-License-Identifier: BSD-3-Clause
+ 
+ """CLI helper for Click."""
++from __future__ import annotations
++
+ 
+ import functools
+ import logging
+@@ -19,14 +21,8 @@
+ from click_command_tree import _build_command_tree, _CommandWrapper
+ 
+ from spsdk import __version__ as spsdk_version
+-from spsdk.apps.utils.interface_helper import load_interface_config
+ from spsdk.apps.utils.utils import INT, SPSDKAppError, make_table_from_items
+-from spsdk.el2go.interface import EL2GOInterfaceHandler
+ from spsdk.exceptions import SPSDKError
+-from spsdk.mboot.interfaces.uart import MbootUARTInterface
+-from spsdk.mboot.protocol.base import MbootProtocolBase
+-from spsdk.sdp.interfaces.uart import SdpUARTInterface
+-from spsdk.sdp.protocol.base import SDPProtocolBase
+ from spsdk.utils.abstract_features import ConfigBaseClass
+ from spsdk.utils.config import Config
+ from spsdk.utils.database import DatabaseManager
+@@ -972,7 +968,7 @@
+                 )
+             self.cmd_family_params[cmd_name] = family_param
+             choice = cast(click.Choice, self.params[0].type)
+-            cast(list, choice.choices).append(cmd_name)
++            choice.choices = (*choice.choices, cmd_name)
+ 
+     def handle_families_info(self, cmd_name: Optional[str] = None) -> None:
+         """Show the supported families."""

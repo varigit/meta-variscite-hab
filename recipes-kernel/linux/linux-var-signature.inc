@@ -15,29 +15,27 @@ do_sign_kernel_image() {
 }
 
 do_sign_kernel_image:append:hab4() {
-    # Only kernel image type Image and zImage are supported by i.MX devices
-    if [ ${KERNEL_IMAGETYPE} != "zImage" ] && \
-       [ ${KERNEL_IMAGETYPE} != "Image" ] && \
-       [ ${KERNEL_IMAGETYPE} != "Image.gz" ]; then
-        bbfatal "Unknown kernel image format"
-    fi
-
-    if [ "${KERNEL_IMAGETYPE}" = "Image" ] || \
-       [ "${KERNEL_IMAGETYPE}" = "Image.gz" ]; then
+    case ${KERNEL_IMAGETYPE} in
+    Image|Image.gz)
         IMAGE="${B}/${KERNEL_OUTPUT_DIR}/Image"
 
         # Get kernel image pad size
         image_pad_size="$(od -An -j 16 -N 4 -i ${IMAGE} | tr -d ' ')"
         # Pad the image
-    elif [ "${KERNEL_IMAGETYPE}" = "zImage" ]; then
+        ;;
+
+    zImage)
         IMAGE="${B}/${KERNEL_OUTPUT_DIR}/${KERNEL_IMAGETYPE}"
 
         # Get kernel image pad size after padding it to next 1K
         image_size="$(stat -L --printf=%s ${IMAGE})"
         image_pad_size="$(expr ${image_size} + $(expr 4096 - $(expr ${image_size} % 4096)))"
-    else
+        ;;
+
+    *)
         bbfatal "Unknown kernel image format"
-    fi
+        ;;
+    esac
 
     # Pad the image
     objcopy -I binary -O binary --pad-to "${image_pad_size}" --gap-fill=0x00 ${IMAGE} "${SIGNDIR}/${KERNEL_IMAGETYPE}_pad.bin"
@@ -47,8 +45,8 @@ do_sign_kernel_image:append:hab4() {
     ivt_pointer="$(expr ${load_address} + ${image_pad_size})"
     csf_pointer="$(expr ${ivt_pointer} + 32)"
 
-    # Generate Image Vector Table script
-    GEN_IVT="$(cat <<-EOF
+    # Generate Image Vector Table
+    python3 -c "$(cat <<-EOF
 	import struct
 	ivt = open('${SIGNDIR}/ivt.bin', 'wb') or Exception('Unable to open ivt file').throw()
 	ivt.write(struct.pack('<L', 0x432000D1)) # Signature
@@ -62,9 +60,6 @@ do_sign_kernel_image:append:hab4() {
 	ivt.close()
 	EOF
 )"
-
-    # Generate Image Vector Table
-    python3 -c "${GEN_IVT}"
 
     # Attach IVT
     cat ${SIGNDIR}/${KERNEL_IMAGETYPE}_pad.bin ${SIGNDIR}/ivt.bin > ${SIGNDIR}/${KERNEL_IMAGETYPE}_pad_ivt.bin

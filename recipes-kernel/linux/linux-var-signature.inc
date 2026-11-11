@@ -68,14 +68,10 @@ do_sign_kernel_image:append:hab4() {
 
     # Attach IVT
     cat ${SIGNDIR}/${KERNEL_IMAGETYPE}_pad.bin ${SIGNDIR}/ivt.bin > ${SIGNDIR}/${KERNEL_IMAGETYPE}_pad_ivt.bin
-}
 
-do_sign_kernel_image:append:hab4() {
     # Use user defined keys
     install -m 0755 ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/csf_hab4.cfg.sample ${SIGNDIR}/csf.cfg
-}
 
-do_sign_kernel_image:append:hab4() {
     # Generate signed image data
     ${DEPLOY_DIR_IMAGE}/${BOOT_TOOLS}/imx_signer -d -i ${SIGNDIR}/${KERNEL_IMAGETYPE}_pad_ivt.bin -c ${SIGNDIR}/csf.cfg
     if [ ! -e "${B}/signed-${KERNEL_IMAGETYPE}_pad_ivt.bin" ]; then

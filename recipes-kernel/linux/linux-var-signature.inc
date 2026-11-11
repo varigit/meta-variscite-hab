@@ -27,9 +27,9 @@ do_sign_kernel_image:append:hab4() {
     zImage)
         IMAGE="${B}/${KERNEL_OUTPUT_DIR}/${KERNEL_IMAGETYPE}"
 
-        # Get kernel image pad size after padding it to next 1K
+        # Get kernel image pad size after padding it to next 4K
         image_size="$(stat -L --printf=%s ${IMAGE})"
-        image_pad_size="$(expr ${image_size} + $(expr 4096 - $(expr ${image_size} % 4096)))"
+        image_pad_size=$(( (image_size / 4096) * 4096 + 4096 ))
         ;;
 
     *)
@@ -40,17 +40,15 @@ do_sign_kernel_image:append:hab4() {
     # Pad the image
     objcopy -I binary -O binary --pad-to "${image_pad_size}" --gap-fill=0x00 ${IMAGE} "${SIGNDIR}/${KERNEL_IMAGETYPE}_pad.bin"
 
-    load_address_hex="${KERNEL_LOAD_ADDRESS}"
-    load_address="$(printf "%u" ${load_address_hex})"
-    ivt_pointer="$(expr ${load_address} + ${image_pad_size})"
-    csf_pointer="$(expr ${ivt_pointer} + 32)"
+    ivt_pointer=$((${KERNEL_LOAD_ADDRESS} + image_pad_size))
+    csf_pointer=$((ivt_pointer + 32))
 
     # Generate Image Vector Table
     python3 -c "$(cat <<-EOF
 	import struct
 	ivt = open('${SIGNDIR}/ivt.bin', 'wb') or Exception('Unable to open ivt file').throw()
 	ivt.write(struct.pack('<L', 0x432000D1)) # Signature
-	ivt.write(struct.pack('<L', ${load_address})) # Load Address (*load_address)
+	ivt.write(struct.pack('<L', ${KERNEL_LOAD_ADDRESS})) # Load Address (*load_address)
 	ivt.write(struct.pack('<L', 0x0)) # Reserved
 	ivt.write(struct.pack('<L', 0x0)) # DCD pointer
 	ivt.write(struct.pack('<L', 0x0)) # Boot Data
